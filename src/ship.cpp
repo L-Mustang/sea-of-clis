@@ -1,4 +1,4 @@
-#include "ship.hpp"
+#include <ship.h>
 
 namespace Soc
 {

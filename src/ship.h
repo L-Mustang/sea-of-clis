@@ -1,5 +1,5 @@
-#ifndef SHIP_HPP
-#define SHIP_HPP
+#ifndef SOC_SHIP_H
+#define SOC_SHIP_H
 
 namespace Soc {
 	class Ship
@@ -23,4 +23,4 @@ namespace Soc {
 	};
 }
 
-#endif // SHIP_HPP
+#endif // SOC_SHIP_H
