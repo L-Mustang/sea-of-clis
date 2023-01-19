@@ -1,4 +1,5 @@
 #include <goods.h>
+#include <random/random.h>
 
 namespace Soc
 {
@@ -6,6 +7,12 @@ namespace Soc
 		m_goods(std::move(goods)),
 		m_amount(amount),
 		m_price(price)
+	{}
+
+	Goods::Goods(int id, std::string goods, int min_amount, int max_amount, int min_price, int max_price) : m_id(id),
+		m_goods(std::move(goods)),
+		m_amount(Random::random(min_amount, max_amount)),
+		m_price(Random::random(min_price, max_price))
 	{}
 
 	Goods::~Goods() = default;
@@ -39,5 +46,18 @@ namespace Soc
 		m_amount = other.m_amount;
 		m_price = other.m_price;
 		return *this;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const Goods& obj)
+	{
+		return os
+			<< " ID: "
+			<< std::right << std::setw(5) << obj.m_id
+			<< " Good: "
+			<< std::right << std::setw(10) << obj.m_goods
+			<< " Amount: "
+			<< std::right << std::setw(5) << obj.m_amount
+			<< " Price: "
+			<< std::right << std::setw(5) << obj.m_price;
 	}
 }

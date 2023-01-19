@@ -10,6 +10,12 @@ add_executable(${PROJECT_NAME}
 	"src/harbor.cpp"
     "src/goods.cpp"
 	"src/filesystem/sqlite_3.cpp"
+	"src/player.cpp"
+	"src/cannons_light.cpp"
+	"src/cannons_medium.cpp"
+	"src/cannons_heavy.cpp"
+	"src/cannons.cpp"
+	"src/cannons_small.cpp"
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)

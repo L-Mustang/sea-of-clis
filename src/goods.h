@@ -1,5 +1,6 @@
 #ifndef SOC_GOODS_H
 #define SOC_GOODS_H
+#include <ostream>
 
 namespace Soc
 {
@@ -7,6 +8,7 @@ namespace Soc
 	{
 	public:
 		Goods(int id, std::string goods, int amount, int price);
+		Goods(int id, std::string goods, int min_amount, int max_amount, int min_price, int max_price);
 		~Goods();
 		Goods(const Goods& other);
 		Goods(Goods&& other) noexcept;
@@ -18,6 +20,8 @@ namespace Soc
 		std::string m_goods;
 		int m_amount;
 		int m_price;
+
+		friend std::ostream& operator<<(std::ostream& os, const Goods& obj);
 	};
 }
 

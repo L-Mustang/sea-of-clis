@@ -15,11 +15,23 @@ namespace Soc::Filesystem
 		Sqlite_3& operator=(const Sqlite_3& other) = delete;
 		Sqlite_3& operator=(Sqlite_3&& other) noexcept = delete;
 
-		std::vector<std::shared_ptr<Harbor>> harbors() override;
-		std::shared_ptr<Harbor> harbor(int id) override;
-		std::vector<std::shared_ptr<Goods>> goods(int harbor_id) override;
+		std::map<int, std::shared_ptr<Harbor>> harbors() override;
+		std::map<int, Goods> goods(int harbor_id) override;
 	private:
-		sqlite3* m_db{};
+		sqlite3* m_db;
+
+		template<typename T>
+		void get_results(const std::string& query, int(*cb)(void*, int, char**, char**), T* res)
+		{
+			char* err = nullptr;
+			sqlite3_exec(m_db, query.c_str(), cb, res, &err);
+			if (err)
+			{
+				const std::string err_str{ err };
+				sqlite3_free(err);
+				throw std::runtime_error(err_str);
+			}
+		}
 	};
 }
 

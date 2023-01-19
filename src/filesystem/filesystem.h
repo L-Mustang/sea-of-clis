@@ -12,9 +12,8 @@ namespace Soc
 		{
 		public:
 			virtual ~Filesystem() = default;
-			virtual std::vector<std::shared_ptr<Harbor>> harbors() = 0;
-			virtual std::shared_ptr<Harbor> harbor(int id) = 0;
-			virtual std::vector<std::shared_ptr<Goods>> goods(int harbor_id) = 0;
+			virtual std::map<int, std::shared_ptr<Harbor>> harbors() = 0;
+			virtual std::map<int, Goods> goods(int harbor_id) = 0;
 		};
 	}
 }
