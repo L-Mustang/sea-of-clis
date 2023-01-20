@@ -5,6 +5,7 @@ namespace Soc
 {
 	class Goods;
 	class Harbor;
+	class Ship;
 
 
 	namespace Filesystem {
@@ -12,8 +13,9 @@ namespace Soc
 		{
 		public:
 			virtual ~Filesystem() = default;
-			virtual std::map<int, std::shared_ptr<Harbor>> harbors() = 0;
-			virtual std::map<int, Goods> goods(int harbor_id) = 0;
+			[[nodiscard]] virtual std::map<int, std::shared_ptr<Harbor>> harbors() const = 0;
+			[[nodiscard]] virtual std::map<int, std::shared_ptr<Goods>> goods(int harbor_id) const = 0;
+			[[nodiscard]] virtual std::map<int, std::shared_ptr<Ship>> ships() const = 0;
 		};
 	}
 }

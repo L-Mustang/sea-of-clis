@@ -17,6 +17,26 @@ namespace Soc
 
 	Goods::~Goods() = default;
 
+	std::string Goods::goods() const
+	{
+		return m_goods;
+	}
+
+	int Goods::amount() const
+	{
+		return m_amount;
+	}
+
+	void Goods::amount(int amount)
+	{
+		m_amount = amount;
+	}
+
+	int Goods::price() const
+	{
+		return m_price;
+	}
+
 	Goods::Goods(const Goods& other) = default;
 
 	Goods::Goods(Goods&& other) noexcept: m_id(other.m_id),
@@ -51,12 +71,10 @@ namespace Soc
 	std::ostream& operator<<(std::ostream& os, const Goods& obj)
 	{
 		return os
-			<< " ID: "
-			<< std::right << std::setw(5) << obj.m_id
 			<< " Good: "
-			<< std::right << std::setw(10) << obj.m_goods
+			<< std::right << std::setw(10) << obj.m_goods << " |"
 			<< " Amount: "
-			<< std::right << std::setw(5) << obj.m_amount
+			<< std::right << std::setw(5) << obj.m_amount << " |"
 			<< " Price: "
 			<< std::right << std::setw(5) << obj.m_price;
 	}

@@ -13,4 +13,4 @@ namespace Soc
 	};
 }
 
-#endif //SOC_Cannons_heavy_H
+#endif //SOC_CANNONS_HEAVY_H

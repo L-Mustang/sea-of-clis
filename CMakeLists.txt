@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.8)
 project(sea-of-clis)
 
+# Delete the CMake cache after changing this option for it to have effect
+option(USE_WIN32 "Use the Win32 API for platform-specific console clearing" OFF)
 
 find_package(unofficial-sqlite3 REQUIRED)
 
 add_executable(${PROJECT_NAME}
+	"${CMAKE_CURRENT_SOURCE_DIR}/icon.rc"
 	"src/main.cpp"
 	"src/ship.cpp"
 	"src/harbor.cpp"
@@ -19,6 +22,20 @@ add_executable(${PROJECT_NAME}
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+if(WIN32 AND USE_WIN32)
+message("Building with Win32 support")
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+	# Prevents Windows.h from adding unnecessary includes    
+	WIN32_LEAN_AND_MEAN
+	# Prevents Windows.h from defining min/max as macros 
+	NOMINMAX
+	# Include Windows.h
+	USE_WIN32
+)
+endif()
+
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "sea_of_clis")
 
 target_include_directories(${PROJECT_NAME} PRIVATE
 	"src"

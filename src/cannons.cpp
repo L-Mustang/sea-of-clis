@@ -10,8 +10,6 @@ namespace Soc
 		m_price(price)
 	{}
 
-	Cannons::~Cannons() = default;
-
 	int Cannons::amount() const
 	{
 		return m_amount;
@@ -26,10 +24,4 @@ namespace Soc
 	{
 		return m_price;
 	}
-
-	void Cannons::price(int price)
-	{
-		m_price = price;
-	}
-	
 }

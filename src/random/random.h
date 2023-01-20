@@ -1,6 +1,6 @@
 #ifndef SOC_RANDOM_RANDOM_H
 #define SOC_RANDOM_RANDOM_H
-#include <concepts>
+
 namespace Soc::Random
 {
 	template <typename T>

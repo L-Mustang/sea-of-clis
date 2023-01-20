@@ -1,24 +1,23 @@
 #ifndef SOC_CANNONS_H
 #define SOC_CANNONS_H
 
+#include <tradable.h>
+
 namespace Soc
 {
-	class Cannons
+	class Cannons : public Tradable
 	{
 	public:
 		Cannons(std::string cannons, int min_amount, int max_amount, int price);
-		virtual ~Cannons();
 		Cannons(const Cannons& other) = default;
 		Cannons(Cannons&& other) noexcept = default;
 		Cannons& operator=(const Cannons& other) = default;
 		Cannons& operator=(Cannons&& other) noexcept = default;
-		[[nodiscard]] virtual int amount() const;
-		virtual void amount(int amount);
-		[[nodiscard]] virtual int price() const;
-		virtual void price(int price);
+		[[nodiscard]] int amount() const override;
+		void amount(int amount) override;
+		[[nodiscard]] int price() const override;
 		virtual int damage() = 0;
-
-	private:
+	protected:
 		std::string m_cannons;
 		int m_amount;
 		int m_price;
@@ -27,9 +26,9 @@ namespace Soc
 		{
 			return os
 				<< " Cannons: "
-				<< std::right << std::setw(25) << obj.m_cannons
+				<< std::right << std::setw(25) << obj.m_cannons << " |"
 				<< " Amount: "
-				<< std::right << std::setw(3) << obj.m_amount
+				<< std::right << std::setw(3) << obj.m_amount << " |"
 				<< " Price: "
 				<< std::right << std::setw(5) << obj.m_price;
 		}
