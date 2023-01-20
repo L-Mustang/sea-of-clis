@@ -22,6 +22,7 @@
 #include <map>
 #include <set>
 #include <functional>
+#include <algorithm>
 
 
 #endif // SOC_PCH_H

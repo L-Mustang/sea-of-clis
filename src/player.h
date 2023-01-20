@@ -26,7 +26,11 @@ namespace Soc
 			m_money(0),
 			m_console(std::make_unique<Logger>(std::filesystem::path{ "logs/" }))
 		{
-			m_bar = [&](){m_console->write(*this);};
+			m_bar = [&]()
+			{
+				m_console->write(*this);
+
+			};
 			m_money = Random::random(100000, 250000);
 			m_harbors = m_filesystem->harbors();
 			m_harbor_ships = m_filesystem->ships();
@@ -54,7 +58,7 @@ namespace Soc
 				{Cannons_type::heavy, std::make_shared<Cannons_heavy>(0, 2, 1000)}
 			};
 			m_harbor_ships = m_filesystem->ships();
-
+			// TODO remove random ships
 			// Remove elements where amount rolled 0;
 			Utils::Map::remove_if_none(m_harbor_cannons);
 			Utils::Map::remove_if_none(m_harbor_goods);
@@ -69,7 +73,7 @@ namespace Soc
 			while (at_harbor)
 			{
 				m_console->clear(m_bar);
-				m_console->write(std::format("Welcome in the port of {}!", harbor->harbor()));
+				m_console->write(std::format("Welcome to the port of {}!", harbor->harbor()));
 				m_console->write(
 					"What would you like to do?\n"
 					"[1]  Buy/sell goods\n"
@@ -82,15 +86,15 @@ namespace Soc
 				switch (m_console->read(5))
 				{
 				case 1:
-					{
-						harbor_buy_sell_goods();
-						break;
-					}
+				{
+					harbor_buy_sell_goods();
+					break;
+				}
 				default:
-					{
-						m_console->write("Chose option smth");
-						break;
-					}
+				{
+					m_console->write("Chose option smth");
+					break;
+				}
 				}
 			}
 		}
@@ -104,7 +108,7 @@ namespace Soc
 				"[2] Sell goods\n"
 				"[0] Return to harbor"
 			);
-			switch(m_console->read(2))
+			switch (m_console->read(2))
 			{
 			case 1:
 				{
@@ -113,6 +117,7 @@ namespace Soc
 				}
 			case 2:
 				{
+					harbor_sell_goods();
 					break;
 				}
 			default:
@@ -124,14 +129,41 @@ namespace Soc
 
 		void harbor_buy_goods()
 		{
-			m_console->clear(m_bar);
+			m_console->clear(m_bar); // Setup
 			m_console->write("GOODS TRADER");
 			m_console->write(m_harbor_goods);
-			m_console->write("Please enter the number of the good you'd wish to buy ...");
-			const int key = m_console->read(m_harbor_goods);
-			const auto goods = m_harbor_goods[key];
-			m_console->write(std::format("Please enter the amount of {} you'd wish to buy (max {}) ...", goods->goods(), goods->amount()));
-			m_console->read(goods->amount());
+			m_console->write("Please enter the number of the good you'd wish to buy, or [0] to return:");
+			const int key = m_console->read(m_harbor_goods); // Get type
+			if(key == 0) return;
+
+			const std::shared_ptr<Goods> good = m_harbor_goods.at(key); 
+			const int threshold = std::min({m_money/good->price(), good->amount(), m_player_ship->cannons_space()}); // Calculate threshold
+			m_console->write(std::format("Please enter the amount of {} you'd wish to buy (max {}), or [0] to cancel:", good->goods(), threshold));
+			const int amount = m_console->read(threshold); // Get amount
+			if(amount == 0) return;
+
+			m_player_ship->cargo_add(key, amount, good); // Transaction
+			Utils::Map::decrement_remove_if_none(key, amount, m_harbor_goods);
+			m_money -= good->price()*amount;
+		}
+
+		void harbor_sell_goods()
+		{
+			m_console->clear(m_bar);  // Setup
+			m_console->write("GOODS TRADER");
+			m_console->write(m_player_ship->cargo());
+			m_console->write("Please enter the number of the good you'd wish to sell, or [0] to return:");
+			const int key = m_console->read(m_player_ship->cargo());  // Get type
+			if(key == 0) return;
+
+			const std::shared_ptr<Goods> good = m_player_ship->cargo().at(key);
+			m_console->write(std::format("Please enter the amount of {} you'd wish to sell (max {}), or [0] to cancel:", good->goods(), good->amount()));
+			const int amount = m_console->read(good->amount());  // Get amount
+			if(amount == 0) return;
+
+			m_player_ship->cargo_remove(key, amount); // Transaction
+			Utils::Map::increment_add_if_not_found(key, amount, *good, m_harbor_goods);
+			m_money += good->price()/2*amount;
 		}
 
 		void sea()
@@ -154,11 +186,16 @@ namespace Soc
 
 		friend std::ostream& operator<<(std::ostream& os, const Player& obj)
 		{
-			return os
-				<< "$"
-				<< std::left << std::setw(9) << Logger::format(obj.m_money)
-				<< std::left << std::setw(12) << obj.m_player_harbor.lock()->harbor()
-				<< std::left << std::setw(17) << obj.m_player_ship->type();
+			return os << std::format(
+				"${}   {}   {}   Cargo: {}/{}   Cannons: {}/{}",
+				Logger::format(obj.m_money),
+				obj.m_player_harbor.lock()->harbor(),
+				obj.m_player_ship->type(),
+				obj.m_player_ship->cargo_amount(),
+				obj.m_player_ship->cargo_max(),
+				obj.m_player_ship->cannons_amount(),
+				obj.m_player_ship->cannons_max()
+			);
 		}
 	};
 }

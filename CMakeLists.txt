@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(sea-of-clis)
 
 # Delete the CMake cache after changing this option for it to have effect
-option(USE_WIN32 "Use the Win32 API for platform-specific console clearing" OFF)
+option(USE_WIN32 "Use the Win32 API for platform-specific console clearing" ON)
 
 find_package(unofficial-sqlite3 REQUIRED)
 

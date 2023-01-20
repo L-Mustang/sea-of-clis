@@ -69,7 +69,7 @@ namespace Soc
 			K in{};
 			T res{};
 			std::cin >> in;
-			while (!std::cin || !map.contains(in)) {
+			while (!std::cin || !(map.contains(in) || in == 0)) {
 				write("Incorrect input, try again");
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
