@@ -18,12 +18,13 @@ namespace Soc
 			m_filestream.close();
 		}
 
+		
 		template <typename... Args>
-		void write(const Args&... args)
+		void write(const Args&... args) // TODO Redundant by std::format, consider removal
 		{
 			((m_filestream << args << ' '), ...) << std::endl;
 			((std::cout << args << ' '), ...) << std::endl;
-		}
+		} 
 
 		template <typename K, typename T>
 		void write(std::map<K, T> vec)
@@ -38,7 +39,7 @@ namespace Soc
 		}
 
 		template <typename K, typename T>
-		void write(std::map<K, std::shared_ptr<T>> map)
+		void write(const std::map<K, std::shared_ptr<T>>& map)
 		{
 			for (const auto& [key, val] : map)
 			{
@@ -63,13 +64,20 @@ namespace Soc
 			return res;
 		}
 
+		void pause()
+		{
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cin.get();
+		}
+
 		template <typename K, typename T>
 		[[nodiscard]] K read(const std::map<K, T>& map)
 		{
 			K in{};
 			T res{};
 			std::cin >> in;
-			while (!std::cin || !(map.contains(in) || in == 0)) {
+			while (!std::cin || !(map.contains(in) || static_cast<int>(in) == 0)) {
 				write("Incorrect input, try again");
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -98,7 +106,7 @@ namespace Soc
 		{
 			static_assert(std::is_invocable_v<F>, "Type F must be an invocable lambda");
 #ifdef USE_WIN32
-			m_filestream << ("[CONSOLE CLEARED]") << std::endl;
+			m_filestream << ("\n[CONSOLE CLEARED]\n") << std::endl;
 #ifdef _WIN32
 			constexpr COORD tl = { 0,0 };
 			CONSOLE_SCREEN_BUFFER_INFO s;

@@ -1,4 +1,4 @@
-#ifndef SOC_SHIP_H
+	#ifndef SOC_SHIP_H
 #define SOC_SHIP_H
 
 #include <cannons.h>
@@ -20,6 +20,7 @@ namespace Soc {
 			m_cargo_max(cargo),
 			m_cannons_max(cannons),
 			m_hp(hp),
+			m_hp_max(hp),
 			m_weight_class(weight_class)
 		{}
 		virtual ~Ship() = default;
@@ -64,6 +65,16 @@ namespace Soc {
 			return cannons_max() - cannons_amount();
 		}
 
+		[[nodiscard]] virtual const std::map<Cannons_type, std::shared_ptr<Cannons>> cannons() const
+		{
+			return m_cannons;
+		}
+
+		[[nodiscard]] virtual std::map<Cannons_type, std::shared_ptr<Cannons>> cannons()
+		{
+			return m_cannons;
+		}
+
 		[[nodiscard]] virtual const std::map<int, std::shared_ptr<Goods>>& cargo() const
 		{
 			return m_cargo;
@@ -86,9 +97,59 @@ namespace Soc {
 			return true;
 		}
 
-		virtual void cannons_add(Cannons_type key, std::shared_ptr<Cannons> cannon)
+		virtual bool cannons_add(Cannons_type key, int amount, Cannons cannon)
 		{
-			
+			Utils::Map::increment_add_if_not_found(key, amount, std::move(cannon), m_cannons);
+			return true;
+		}
+
+		virtual bool cannons_remove(Cannons_type key, int amount)
+		{
+			Utils::Map::decrement_remove_if_none(key, amount, m_cannons);
+			return true;
+		}
+
+		[[nodiscard]] virtual std::set<Cannons_type> cannons_types() const
+		{
+			return {Cannons_type::light, Cannons_type::medium, Cannons_type::heavy};
+		}
+
+		virtual void cargo_update_prices(const std::map<int, std::shared_ptr<Goods>>& from)
+		{
+			for (auto& [key, val] : m_cargo)
+			{
+				val->price(from.at(key)->price());
+			}
+		}
+
+		[[nodiscard]] int price() const
+		{
+			return m_price;
+		}
+
+		void price(const int price)
+		{
+			m_price = price;
+		}
+
+		[[nodiscard]] int hp() const
+		{
+			return m_hp;
+		}
+	
+		[[nodiscard]] int hp_max() const
+		{
+			return m_hp_max;
+		}
+
+		[[nodiscard]] int hp_dmg() const
+		{
+			return m_hp_max - m_hp;
+		}
+
+		void hp_dmg_add(int dmg)
+		{
+			m_hp -= dmg;
 		}
 
 	protected:
@@ -98,6 +159,7 @@ namespace Soc {
 		int m_cargo_max;
 		int m_cannons_max;
 		int m_hp;
+		int m_hp_max;
 		Ship_type m_weight_class;
 		std::map<Cannons_type, std::shared_ptr<Cannons>> m_cannons;
 		std::map<int, std::shared_ptr<Goods>> m_cargo;

@@ -19,6 +19,7 @@ namespace Soc
 		[[nodiscard]] int amount() const override;
 		void amount(int amount) override;
 		[[nodiscard]] int price() const override;
+		void price(int price) override;
 	private:
 		int m_id;
 		std::string m_goods;

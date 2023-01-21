@@ -37,6 +37,11 @@ namespace Soc
 		return m_price;
 	}
 
+	void Goods::price(int price)
+	{
+		m_price = price;
+	}
+
 	Goods::Goods(const Goods& other) = default;
 
 	Goods::Goods(Goods&& other) noexcept: m_id(other.m_id),

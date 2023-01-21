@@ -10,6 +10,11 @@ namespace Soc
 		m_price(price)
 	{}
 
+	std::string Cannons::cannons() const
+	{
+		return m_cannons;
+	}
+
 	int Cannons::amount() const
 	{
 		return m_amount;
@@ -23,5 +28,15 @@ namespace Soc
 	int Cannons::price() const
 	{
 		return m_price;
+	}
+
+	void Cannons::price(int price)
+	{
+		m_price = price;
+	}
+
+	int Cannons::damage()
+	{
+		return Random::random(0, 4);
 	}
 }

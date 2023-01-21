@@ -9,14 +9,12 @@ namespace Soc
 	{
 	public:
 		Cannons(std::string cannons, int min_amount, int max_amount, int price);
-		Cannons(const Cannons& other) = default;
-		Cannons(Cannons&& other) noexcept = default;
-		Cannons& operator=(const Cannons& other) = default;
-		Cannons& operator=(Cannons&& other) noexcept = default;
+		[[nodiscard]] std::string cannons() const;
 		[[nodiscard]] int amount() const override;
 		void amount(int amount) override;
 		[[nodiscard]] int price() const override;
-		virtual int damage() = 0;
+		void price(int price) override;
+		virtual int damage();
 	protected:
 		std::string m_cannons;
 		int m_amount;

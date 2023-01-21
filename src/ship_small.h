@@ -17,9 +17,14 @@ namespace Soc {
 		Ship(id, std::move(type), price, cargo_max, cannons_max, hp, weight_class)
 		{}
 
-		std::string size() const override
+		[[nodiscard]] std::string size() const override
 		{
 			return "Small";
+		}
+
+		[[nodiscard]] std::set<Cannons_type> cannons_types() const override
+		{
+			return {Cannons_type::light, Cannons_type::medium};
 		}
 	};
 }

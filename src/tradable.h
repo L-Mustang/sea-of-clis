@@ -10,6 +10,7 @@ namespace Soc
 		[[nodiscard]] virtual int amount() const = 0;
 		virtual void amount(int amount) = 0;
 		[[nodiscard]] virtual int price() const = 0;
+		virtual void price(int price) = 0;
 	};
 }
 
