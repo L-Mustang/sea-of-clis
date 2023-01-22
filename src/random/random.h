@@ -6,9 +6,9 @@ namespace Soc::Random
 	template <typename T>
 	T random(T low, T high)
 	{
-		static std::random_device seeder;
-		static std::mt19937 gen(seeder());
-		std::conditional_t<std::is_integral_v<T>,
+		static std::random_device dev;
+		static std::mt19937 gen(dev());
+		std::conditional_t<std::is_integral_v<T>, // Check if integral, otherwise real
 		                 std::uniform_int_distribution<T>,
 		                 std::uniform_real_distribution<T>
 		> dis(low, high);

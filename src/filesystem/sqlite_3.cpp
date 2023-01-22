@@ -24,7 +24,7 @@ namespace Soc::Filesystem
 
 	std::map<int, std::shared_ptr<Harbor>> Sqlite_3::harbors() const
 	{
-		auto cb = [](void* res, int col_count, char** records, char** col_names)
+		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
 			const auto goods = static_cast<std::map<int, std::shared_ptr<Harbor>>*>(res);
 			goods->emplace(
@@ -43,7 +43,7 @@ namespace Soc::Filesystem
 
 	std::map<int, std::shared_ptr<Goods>> Sqlite_3::goods(int harbor_id) const
 	{
-		auto cb = [](void* res, int col_count, char** records, char** col_names)
+		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
 			const auto goods = static_cast<std::map<int, std::shared_ptr<Goods>>*>(res);
 			goods->emplace(
@@ -113,7 +113,7 @@ namespace Soc::Filesystem
 
 	void Sqlite_3::harbors_distances(int harbor_id, std::map<int, std::shared_ptr<Harbor>>& harbors)
 	{
-		auto cb = [](void* res, int col_count, char** records, char** col_names)
+		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
 			const auto harbors = static_cast<std::map<int, std::shared_ptr<Harbor>>*>(res);
 			const int key = std::stoi(std::string{ records[0] });
@@ -141,7 +141,7 @@ namespace Soc::Filesystem
 
 	std::set<std::string> Sqlite_3::peculiarities(int ship_id) const
 	{
-		auto cb = [](void* res, int col_count, char** records, char** col_names)
+		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
 			const auto peculiarites = static_cast<std::set<std::string>*>(res);
 			peculiarites->emplace(
@@ -161,7 +161,7 @@ namespace Soc::Filesystem
 		return res;
 	}
 
-	void Sqlite_3::exec_query_ext(const std::string& query, const std::function<void(sqlite3_stmt*)> cb) const
+	void Sqlite_3::exec_query_ext(const std::string& query, const std::function<void(sqlite3_stmt*)>& cb) const
 	{
 		sqlite3_stmt* stmt = nullptr;
 		if (sqlite3_prepare_v2(m_db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {

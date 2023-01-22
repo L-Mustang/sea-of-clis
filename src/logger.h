@@ -4,7 +4,6 @@
 
 namespace Soc
 {
-
 	class Logger {
 	public:
 		explicit Logger(std::filesystem::path log) : m_filepath(std::move(log))
@@ -20,9 +19,9 @@ namespace Soc
 
 		
 		template <typename... Args>
-		void write(const Args&... args) // TODO Redundant by std::format, consider removal
+		void write(const Args&... args)
 		{
-			((m_filestream << args << ' '), ...) << std::endl;
+			((m_filestream << args << ' '), ...) << std::endl; // C++17 fold expression
 			((std::cout << args << ' '), ...) << std::endl;
 		} 
 
@@ -120,10 +119,10 @@ namespace Soc
 			FillConsoleOutputCharacter(console, ' ', cells, tl, &written);
 			FillConsoleOutputAttribute(console, s.wAttributes, cells, tl, &written);
 			SetConsoleCursorPosition(console, tl);
-#else
+#else // ^^^ windows / other vvv
 			std::cout << "\033[2J\033[1; 1H";
-#endif
-#endif
+#endif // _WIN32
+#endif // USE_WIN32
 			cb();
 		}
 

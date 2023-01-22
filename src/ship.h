@@ -168,7 +168,7 @@ namespace Soc {
 					dmg += val->damage();					
 				}
 			}
-			return dmg;
+			return dmg/2; // Divide damage by 2 because a broadside can only be fired from one side
 		}
 
 	protected:

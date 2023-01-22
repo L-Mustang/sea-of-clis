@@ -39,4 +39,15 @@ namespace Soc
 	{
 		return Random::random(0, 4);
 	}
+
+	std::ostream& operator<<(std::ostream& os, const Cannons& obj)
+	{
+		return os
+			<< " Cannons: "
+			<< std::right << std::setw(25) << obj.m_cannons << " |"
+			<< " Amount: "
+			<< std::right << std::setw(3) << obj.m_amount << " |"
+			<< " Price: "
+			<< std::right << std::setw(5) << obj.m_price;
+	}
 }

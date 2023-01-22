@@ -3,6 +3,7 @@
 
 #include <filesystem/filesystem.h>
 
+
 namespace Soc::Filesystem
 {
 	class Sqlite_3 final : public Filesystem
@@ -37,7 +38,7 @@ namespace Soc::Filesystem
 			}
 		}
 
-		void exec_query_ext(const std::string& query, const std::function<void(sqlite3_stmt*)> cb) const;
+		void exec_query_ext(const std::string& query, const std::function<void(sqlite3_stmt*)>& cb) const;
 	};
 }
 

@@ -19,6 +19,12 @@ https://softwareengineering.stackexchange.com/a/423306
 ### final else clause
 See AV Rule 192
 
+### Deleted copy
+https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#Rc-copy-virtual
+
+### ASan exceptions
+https://developercommunity.visualstudio.com/t/access-violation-writing-location-in-output-window/1383196
+
 ### Credits
 Icon
 https://opengameart.org/content/old-fashioned-pirate-ship

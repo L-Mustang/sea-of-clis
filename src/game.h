@@ -24,17 +24,30 @@ namespace Soc
 	public:
 		explicit Game(std::unique_ptr<Filesystem::Filesystem> filesystem)
 			: m_filesystem(std::move(filesystem)),
-			m_money(0),
+			m_money(Random::random(100000, 250000)),
+			m_harbors(m_filesystem->harbors()),
+			m_harbor_ships(m_filesystem->ships()),
 			m_console(std::make_unique<Logger>(std::filesystem::path{ "logs/" }))
 		{
-			m_bar = [&]() {	m_console->write(*this); };
-			m_money = Random::random(100000, 250000);
-			m_harbors = m_filesystem->harbors();
-			m_harbor_ships = m_filesystem->ships();
 			m_player_harbor = Utils::Map::random(m_harbors);
 			m_player_ship = Utils::Map::random(m_harbor_ships);
 			m_player_ship->price(m_player_ship->price() / 2); // Player's ship should be at 50% of the new price
 			loop();
+		}
+
+		void victory()
+		{
+			m_console->clear(m_status_bar);
+			m_console->write("\nVICTORY ACHIEVED\n");
+			m_has_won = true; // Must be set to prevent seeing victory screen repeatedly
+			m_console->wait();
+		}
+
+		void game_over()
+		{
+			m_console->clear(m_status_bar);
+			m_console->write("\nYOU DIED\n");
+			m_console->wait();
 		}
 
 		void loop()
@@ -44,11 +57,9 @@ namespace Soc
 				harbor();
 				if (m_exit) break;
 				sea();
-				if(m_has_died) // For when you can't game
+				if (m_has_died) // For when you can't game
 				{
-					m_console->clear(m_bar);
-					m_console->write("YOU DIED");
-					m_console->wait();
+					game_over();
 					break;
 				}
 			}
@@ -80,7 +91,7 @@ namespace Soc
 
 			while (m_at_harbor)
 			{
-				m_console->clear(m_bar);
+				m_console->clear(m_status_bar);
 				m_console->write(std::format("Welcome to the port of {}!", m_player_harbor->harbor()));
 				m_console->write(
 					"What would you like to do?\n"
@@ -120,18 +131,19 @@ namespace Soc
 				}
 				default:
 				{
-					m_at_harbor = false;
 					m_exit = true;
 					break;
 				}
 				}
+				if (m_money >= 1000000) victory();
+				if (m_exit) break;
 			}
 			m_at_harbor = false;
 		}
 
 		void harbor_buy_sell_goods()
 		{
-			m_console->clear(m_bar);
+			m_console->clear(m_status_bar);
 			m_console->write(
 				"Would you like to buy or sell goods?\n"
 				"[1] Buy goods\n"
@@ -159,7 +171,7 @@ namespace Soc
 
 		void harbor_buy_goods()
 		{
-			m_console->clear(m_bar); // Setup
+			m_console->clear(m_status_bar); // Setup
 			m_console->write("GOODS TRADER\n");
 			m_console->write(m_harbor_goods);
 			m_console->write("\nPlease enter the number of the good you'd wish to buy, or [0] to return:");
@@ -182,7 +194,7 @@ namespace Soc
 
 		void harbor_sell_goods()
 		{
-			m_console->clear(m_bar);  // Setup
+			m_console->clear(m_status_bar);  // Setup
 			m_console->write("GOODS TRADER\n");
 			m_console->write(m_player_ship->cargo());
 			m_console->write("\nPlease enter the number of the good you'd wish to sell, or [0] to return:");
@@ -204,7 +216,7 @@ namespace Soc
 
 		void harbor_buy_sell_cannons()
 		{
-			m_console->clear(m_bar);
+			m_console->clear(m_status_bar);
 			m_console->write(
 				"Would you like to buy or sell cannons?\n"
 				"[1] Buy cannons\n"
@@ -233,7 +245,7 @@ namespace Soc
 		void harbor_buy_cannons()
 		{
 			const auto cannons_filtered = Utils::Map::filter_view(m_player_ship->cannons_types(), m_harbor_cannons); // Must get compatible cannons
-			m_console->clear(m_bar); // Setup
+			m_console->clear(m_status_bar); // Setup
 			m_console->write("IRONWORKS\n");
 			m_console->write(cannons_filtered);
 			m_console->write("\nPlease enter the number of the cannons you'd wish to buy, or [0] to return:");
@@ -258,7 +270,7 @@ namespace Soc
 
 		void harbor_sell_cannons()
 		{
-			m_console->clear(m_bar);  // Setup
+			m_console->clear(m_status_bar);  // Setup
 			m_console->write("IRONWORKS\n");
 			m_console->write(m_player_ship->cannons());
 			m_console->write("\nPlease enter the number of the cannons you'd wish to sell, or [0] to return:");
@@ -281,7 +293,7 @@ namespace Soc
 
 		void harbor_buy_ships()
 		{
-			m_console->clear(m_bar);  // Setup
+			m_console->clear(m_status_bar);  // Setup
 			m_console->write("SHIPYARD\n");
 			m_console->write(m_harbor_ships);
 			m_console->write("\nPlease enter the number of the ship you'd wish to buy, or [0] to return:");
@@ -303,9 +315,9 @@ namespace Soc
 				));
 			}
 			m_console->write(std::format(
-				"Are you sure you want to sell your ship for ${}. and buy a {} for ${}?"
-				"\n[0] No"
-				"\n[1] Yes",
+				"Are you sure you want to sell your ship for ${} and buy a {} for ${}?"
+				"\n[1] Yes"
+				"\n[0] No",
 				ship_old->price(),
 				ship_new->type(),
 				ship_new->price()
@@ -320,7 +332,7 @@ namespace Soc
 				m_harbor_ships.erase(key);
 				m_player_ship->price(m_player_ship->price() / 2);
 				ship_old->price(ship_old->price() * 2); // Assign old ship to yard, fix price
-				m_harbor_ships.insert({ 99, ship_old });
+				m_harbor_ships.insert_or_assign(99, ship_old);
 				break;
 			}
 			default:
@@ -332,7 +344,7 @@ namespace Soc
 
 		void harbor_repair()
 		{
-			m_console->clear(m_bar);  // Setup
+			m_console->clear(m_status_bar);  // Setup
 			m_console->write("SHIPYARD\n");
 			if (m_player_ship->hp_dmg() == 0) // Check if ship is repaired
 			{
@@ -352,12 +364,12 @@ namespace Soc
 
 		void harbor_set_sail()
 		{
-			m_console->clear(m_bar);
+			m_console->clear(m_status_bar);
 			m_console->write("PORT\n");
 			m_console->write(m_harbors);
 			m_console->write("\nPlease enter the number of the port you'd wish to sail to, or [0] to return:");
 			const int key = m_console->read(m_harbors); // Get type
-			if(key == 0) return;
+			if (key == 0) return;
 			m_player_harbor = m_harbors.at(key);
 			m_at_harbor = false;
 		}
@@ -368,9 +380,10 @@ namespace Soc
 			while (m_at_sea)
 			{
 				if (Random::random(1, 100) <= 20) sea_battle(); // Random pirate encounter
-				if (m_has_died) break;
+				if (m_has_died) break; // Check whether player died to pirates
 
-				sea_move();	
+				sea_move();
+				if (m_has_died) break; // Check whether player died to storm
 
 				if (m_player_harbor->distance() <= 0) { // Check if destination reached
 					m_console->write(std::format("Land ahoy! We'll be mooring in the port of {}!", m_player_harbor->harbor()));
@@ -397,15 +410,19 @@ namespace Soc
 				{Cannons_type::heavy, std::make_shared<Cannons_heavy>(999, 999, 1000)}
 			};
 			auto cannons = Utils::Map::filter_view(pirate_ship->cannons_types(), m_harbor_cannons); // Remove incompatible
-			const auto key = Utils::Map::random_key(cannons); // Get random key from map
-			const auto cannon = m_harbor_cannons.at(key); // Get value
-			pirate_ship->cannons_add(key, pirate_ship->cannons_max(), cannon);
+			for (auto& [key, val] : cannons) // Add random cannons
+			{
+				if (pirate_ship->cannons_space() != 0) { // Don't add cannons if ship is already full
+					const int max_amount = pirate_ship->cannons_max() / static_cast<int>(cannons.size()); // Generate equal distribution of cannons
+					pirate_ship->cannons_add(key, Random::random(1, max_amount), val);
+				}
+			}
 			return pirate_ship;
 		}
 
 		void sea_battle()
 		{
-			m_console->clear(m_bar);
+			m_console->clear(m_status_bar);
 			m_console->write("PIRATES\n");
 			m_console->write("Pirates have approached us!");
 			m_console->wait();
@@ -413,48 +430,53 @@ namespace Soc
 			const auto pirate_ship = sea_pirate_ship();
 
 			m_is_fighting = true;
-			while(m_is_fighting)
+			while (m_is_fighting)
 			{
-				m_console->clear(m_bar);
+				bool has_surrendered = false;
+				bool has_escaped = false;
+				m_console->clear(m_status_bar);
 				m_console->write("PIRATES\n");
 				m_console->write(std::format("Their ship:  {}  HP:  {}/{} Cannons:  {}",
 					pirate_ship->type(), pirate_ship->hp(), pirate_ship->hp_max(), pirate_ship->cannons_amount()));
-				m_console->write(
+				const int escape_chance = sea_escape(pirate_ship);
+				m_console->write(std::format(
 					"What should we do?\n"
 					"[1]  Fire broadside\n"
-					"[2]  Escape\n"
-					"[3]  Surrender\n"
-				);
+					"[2]  Escape ({}% chance)\n"
+					"[3]  Surrender\n", escape_chance
+				));
 				switch (m_console->read(3, 1))
 				{
 				case 1:
-					{
-						int dmg = m_player_ship->broadside();
-						pirate_ship->hp_dmg_add(dmg);
-						m_console->write(std::format("We've dealt {} damage to their ship!", dmg));
-						break;
-					}
-				case 2:
-					{
-						sea_escape(pirate_ship);
-						break;
-					}
-				case 3:
-					{
-						m_player_ship->cargo().clear();
-						m_console->write(std::format("We have surrendered, but had to hand over all our cargo"));
-						m_console->wait();
-						m_is_fighting = false;
-						break;
-					}
-				default: ;
-				}
-				if(!m_has_surrendered)
 				{
-					m_has_surrendered = false;
-					break; // Check if player surrendered
+					int dmg = m_player_ship->broadside();
+					pirate_ship->hp_dmg_add(dmg);
+					m_console->write(std::format("We've dealt {} damage to their ship!", dmg));
+					break;
 				}
-				if(pirate_ship->hp() <= 0) // Check if pirates are dead
+				case 2:
+				{
+
+					if (Random::random(1, 100) <= escape_chance)
+					{
+						has_escaped = true;
+						m_console->write("It looks we'll successfully escape the pirates, but we're still within range of their broadside!");
+					}
+					else m_console->write("We've failed to escape the pirates!");
+					break;
+				}
+				case 3:
+				{
+					m_player_ship->cargo().clear();
+					m_console->write(std::format("We have surrendered, but had to hand over all our cargo"));
+					has_surrendered = true;
+					m_console->wait();
+					break;
+				}
+				default: break;
+				}
+				if (has_surrendered) break; // Check if player surrendered
+				if (pirate_ship->hp() <= 0) // Check if pirates are dead
 				{
 					m_console->write("The pirates' ship sunk!");
 					m_console->wait();
@@ -466,61 +488,60 @@ namespace Soc
 				m_console->write(std::format("The pirates have dealt {} damage to our ship!", dmg));
 
 				m_console->wait(); // Player's turn
-				if(m_player_ship->hp() <= 0) // Check whether player died
+				if (m_player_ship->hp() <= 0) // Check whether player died
 				{
 					m_has_died = true;
 					break;
 				}
+				if (has_escaped) break; // Check if player escaped
+
 			}
 			m_is_fighting = false;
-			m_has_surrendered = false;
 		}
 
-		void sea_escape(std::shared_ptr<Ship> pirate_ship)
+		[[nodiscard]] int sea_escape(std::shared_ptr<Ship> pirate_ship)
 		{
 			int chance{};
-			switch(m_player_ship->weight_class())
+			switch (m_player_ship->weight_class())
 			{
 			case Ship_type::light:
-				{
-					chance = 50;
-					break;
-				}
-			case Ship_type::normal:
-				{
-					chance = 30;
-					break;
-				}
-			case Ship_type::heavy:
-				{
-					chance = 5;
-					break;
-				}
+			{
+				chance = 50;
+				break;
 			}
-			switch(pirate_ship->weight_class())
+			case Ship_type::normal:
+			{
+				chance = 30;
+				break;
+			}
+			case Ship_type::heavy:
+			{
+				chance = 5;
+				break;
+			}
+			default: break;
+			}
+			switch (pirate_ship->weight_class())
 			{
 			case Ship_type::normal:
-				{
-					chance += 10;
-					break;
-				}
+			{
+				chance += 10;
+				break;
+			}
 			case Ship_type::heavy:
-				{
-					chance += 25;
-					break;
-				}
+			{
+				chance += 25;
+				break;
+			}
 			case Ship_type::light: break;
+			default: break;
 			}
-			if(Random::random(1, 100) <= chance){
-				m_is_fighting = false;
-				m_console->write("We've sucessfully escaped the pirates!");
-			}
-			else m_console->write("We've failed to escape the pirates!");
+			return chance;
 		}
 
 		void sea_move()
 		{
-			m_console->clear(m_bar);
+			m_console->clear(m_status_bar);
 			constexpr int speed = 1;
 			int wind = Random::random(1, 20);
 
@@ -541,7 +562,7 @@ namespace Soc
 			else if (wind <= 7)
 			{
 				m_console->write("A gentle breeze");
-				if (m_player_ship->weight_class() != Ship_type::heavy){
+				if (m_player_ship->weight_class() != Ship_type::heavy) {
 					m_player_harbor->distance_remove(speed);
 					m_console->write("Our ship is a day closer to its destination.");
 				}
@@ -577,7 +598,13 @@ namespace Soc
 
 				const int dmg = Random::random(1, m_player_ship->hp());
 				m_player_ship->hp_dmg_add(dmg);
-				m_console->write(std::format("Our ship took {} HP of damage during the storm!", dmg));
+				m_console->write(std::format("Our ship took {} damage during the storm!", dmg));
+			}
+			if (m_player_ship->hp() <= 0) // Check whether player died
+			{
+				m_has_died = true;
+				m_console->wait();
+				return;
 			}
 
 			m_console->write(std::format(
@@ -588,7 +615,7 @@ namespace Soc
 
 	private:
 		std::unique_ptr<Filesystem::Filesystem> m_filesystem;
-		int m_money;
+		int m_money = 0;
 		std::shared_ptr<Ship> m_player_ship;
 		std::map<int, std::shared_ptr<Harbor>> m_harbors;
 		std::shared_ptr<Harbor> m_player_harbor;
@@ -596,13 +623,13 @@ namespace Soc
 		std::map<int, std::shared_ptr<Goods>> m_harbor_goods;
 		std::map<int, std::shared_ptr<Ship>> m_harbor_ships;
 		std::unique_ptr<Logger> m_console;
-		std::function<void()> m_bar;
+		std::function<void()> m_status_bar = [&]() {	m_console->write(*this); };
 		bool m_exit = false;
 		bool m_at_harbor = false;
 		bool m_at_sea = false;
 		bool m_is_fighting = false;
 		bool m_has_died = false;
-		bool m_has_surrendered = false;
+		bool m_has_won = false;
 
 		friend std::ostream& operator<<(std::ostream& os, const Game& obj)
 		{
