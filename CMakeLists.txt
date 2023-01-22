@@ -13,7 +13,7 @@ add_executable(${PROJECT_NAME}
 	"src/harbor.cpp"
     "src/goods.cpp"
 	"src/filesystem/sqlite_3.cpp"
-	"src/player.cpp"
+	"src/game.cpp"
 	"src/cannons_light.cpp"
 	"src/cannons_medium.cpp"
 	"src/cannons_heavy.cpp"
