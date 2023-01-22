@@ -111,6 +111,34 @@ namespace Soc::Filesystem
 		return ships;
 	}
 
+	void Sqlite_3::harbors_distances(int harbor_id, std::map<int, std::shared_ptr<Harbor>>& harbors)
+	{
+		auto cb = [](void* res, int col_count, char** records, char** col_names)
+		{
+			const auto harbors = static_cast<std::map<int, std::shared_ptr<Harbor>>*>(res);
+			const int key = std::stoi(std::string{ records[0] });
+			harbors->at(key)->distance(
+				std::stoi(std::string{ records[1] }
+			));
+			return 0;
+		};
+		const std::string query1 = std::format(
+			"SELECT haven1_id, afstand "
+			"FROM afstanden "
+			"WHERE haven2_id == {}",
+			harbor_id
+		);
+
+		const std::string query2 = std::format(
+			"SELECT haven2_id, afstand "
+			"FROM afstanden "
+			"WHERE haven1_id == {}",
+			harbor_id
+		);
+		exec_query(query1, cb, &harbors);
+		exec_query(query2, cb, &harbors);
+	}
+
 	std::set<std::string> Sqlite_3::peculiarities(int ship_id) const
 	{
 		auto cb = [](void* res, int col_count, char** records, char** col_names)

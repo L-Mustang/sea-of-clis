@@ -9,12 +9,13 @@ namespace Soc
 	{
 	public:
 		Cannons(std::string cannons, int min_amount, int max_amount, int price);
+
 		[[nodiscard]] std::string cannons() const;
 		[[nodiscard]] int amount() const override;
 		void amount(int amount) override;
 		[[nodiscard]] int price() const override;
 		void price(int price) override;
-		virtual int damage();
+		virtual int damage() = 0;
 	protected:
 		std::string m_cannons;
 		int m_amount;

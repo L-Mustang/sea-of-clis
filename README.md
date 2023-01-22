@@ -16,6 +16,8 @@ https://stackoverflow.com/a/69490123/10787114
 ### static members functions because no members are accessed
 https://softwareengineering.stackexchange.com/a/423306
 
+### final else clause
+See AV Rule 192
 
 ### Credits
 Icon

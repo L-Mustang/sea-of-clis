@@ -42,6 +42,11 @@ namespace Soc
 		m_price = price;
 	}
 
+	std::shared_ptr<Tradable> Goods::copy() const
+	{
+		return std::make_shared<Goods>(*this);
+	}
+
 	Goods::Goods(const Goods& other) = default;
 
 	Goods::Goods(Goods&& other) noexcept: m_id(other.m_id),

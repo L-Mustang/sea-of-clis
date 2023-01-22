@@ -1,5 +1,5 @@
 #include <filesystem/sqlite_3.h>
-#include <player.h>
+#include <game.h>
 
 auto io = Soc::Filesystem::Sqlite_3(std::filesystem::path("db/handelsschepen.db"));
 
@@ -14,7 +14,7 @@ int main()
 #endif
 	try
 	{
-		const Soc::Player player{ std::make_unique<Soc::Filesystem::Sqlite_3>(std::filesystem::path("db/handelsschepen.db")) };
+		const Soc::Game player{ std::make_unique<Soc::Filesystem::Sqlite_3>(std::filesystem::path("db/handelsschepen.db")) };
 	}
 	catch(std::exception& e)
 	{

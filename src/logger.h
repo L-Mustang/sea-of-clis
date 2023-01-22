@@ -64,10 +64,9 @@ namespace Soc
 			return res;
 		}
 
-		void pause()
+		void wait()
 		{
-			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			write("[...]");
 			std::cin.get();
 		}
 
@@ -83,6 +82,8 @@ namespace Soc
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 				std::cin >> in;
 			}
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			m_filestream << res << std::endl;
 			return in;
 		}
@@ -97,6 +98,8 @@ namespace Soc
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 				std::cin >> res;
 			}
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			m_filestream << res << std::endl;
 			return res;
 		}

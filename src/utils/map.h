@@ -4,10 +4,30 @@
 #include <tradable.h>
 #include <random/random.h>
 
+namespace Soc
+{
+	class Harbor;
+}
+
 namespace Soc::Utils::Map
 {
+	//template<typename K, typename T>
+	//void increment_add_if_not_found(K key, int amount, T val, std::map<K, std::shared_ptr<T>>& to)
+	//{
+	//	static_assert(std::is_base_of_v<Tradable, T>, "Type T must derive from Tradable");
+	//	if (to.contains(key)) // Check if key already exists in to.
+	//	{
+	//		to.at(key)->amount(to.at(key)->amount() + amount); // If so, increment
+	//	}
+	//	else // If not, insert copy and adjust amount
+	//	{
+	//		val.amount(amount);
+	//		to.emplace(key, std::make_shared<T>(val));
+	//	}
+	//}
+
 	template<typename K, typename T>
-	void increment_add_if_not_found(K key, int amount, T val, std::map<K, std::shared_ptr<T>>& to)
+	void increment_add_if_not_found(K key, int amount, std::shared_ptr<T> val, std::map<K, std::shared_ptr<T>>& to)
 	{
 		static_assert(std::is_base_of_v<Tradable, T>, "Type T must derive from Tradable");
 		if (to.contains(key)) // Check if key already exists in to.
@@ -16,8 +36,9 @@ namespace Soc::Utils::Map
 		}
 		else // If not, insert copy and adjust amount
 		{
-			val.amount(amount);
-			to.emplace(key, std::make_shared<T>(val));
+			const auto val_cpy = val->copy();
+			val_cpy->amount(amount);
+			to.emplace(key, std::static_pointer_cast<T>(val_cpy));
 		}
 	}
 
@@ -67,6 +88,22 @@ namespace Soc::Utils::Map
 		for (auto it = map.begin(); it != map.end();)
 		{
 			if (it->second->amount() == 0)
+			{
+				it = map.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
+
+	template <typename K>
+	void remove_if_none(std::map<K, std::shared_ptr<Harbor>>& map)
+	{
+		for (auto it = map.begin(); it != map.end();)
+		{
+			if (it->second->distance() == 0)
 			{
 				it = map.erase(it);
 			}
@@ -127,6 +164,17 @@ namespace Soc::Utils::Map
 		auto rand_val = it->second;
 		map.erase(it->first);
 		return rand_val;
+	}
+
+	template <typename K, typename T>
+	K random_key(std::map<K, T>& map)
+	{
+		int rand = Random::random(0, static_cast<int>(map.size() - 1));
+		auto it = map.begin();
+		std::advance(it, rand);
+		auto rand_key = it->first;
+		map.erase(it->first);
+		return rand_key;
 	}
 
 	template <typename K, typename T>

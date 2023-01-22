@@ -4,6 +4,7 @@
 namespace Soc
 {
 	Harbor::Harbor(int id, std::string harbor) : m_id(id),
+		m_distance(0),
 		m_harbor(std::move(harbor))
 	{
 	}
@@ -71,5 +72,20 @@ namespace Soc
 	void Harbor::goods_take(const std::shared_ptr<const Goods>& goods)
 	{
 		std::erase(m_goods, goods);
+	}
+
+	void Harbor::distance(int distance)
+	{
+		m_distance = distance;
+	}
+
+	int Harbor::distance() const
+	{
+		return m_distance > 0 ? m_distance : 0;
+	}
+
+	void Harbor::distance_remove(int distance)
+	{
+		m_distance -= distance;
 	}
 }

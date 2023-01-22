@@ -20,6 +20,7 @@ namespace Soc
 		void amount(int amount) override;
 		[[nodiscard]] int price() const override;
 		void price(int price) override;
+		[[nodiscard]] std::shared_ptr<Tradable> copy() const override;
 	private:
 		int m_id;
 		std::string m_goods;

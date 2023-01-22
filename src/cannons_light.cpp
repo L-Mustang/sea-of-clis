@@ -1,6 +1,7 @@
 #include <cannons_light.h>
 
 #include <random/random.h>
+#include <tradable.h>
 
 namespace Soc
 {
@@ -10,5 +11,10 @@ namespace Soc
 	int Cannons_light::damage()
 	{
 		return Random::random(0, 2);
+	}
+
+	std::shared_ptr<Tradable> Cannons_light::copy() const
+	{
+		return std::make_shared<Cannons_light>(*this);
 	}
 }

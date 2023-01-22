@@ -5,6 +5,7 @@
 #include <cannons_small.h>
 #include <cannons_type.h>
 #include <ostream>
+#include <utility>
 #include <ship_type.h>
 #include <utils/map.h>
 
@@ -87,7 +88,7 @@ namespace Soc {
 
 		virtual bool cargo_add(int key, int amount, std::shared_ptr<Goods> good)
 		{
-			Utils::Map::increment_add_if_not_found(key, amount, *good, m_cargo);
+			Utils::Map::increment_add_if_not_found(key, amount, good, m_cargo);
 			return true;
 		}
 
@@ -97,7 +98,7 @@ namespace Soc {
 			return true;
 		}
 
-		virtual bool cannons_add(Cannons_type key, int amount, Cannons cannon)
+		virtual bool cannons_add(Cannons_type key, int amount, std::shared_ptr<Cannons> cannon)
 		{
 			Utils::Map::increment_add_if_not_found(key, amount, std::move(cannon), m_cannons);
 			return true;
@@ -150,6 +151,24 @@ namespace Soc {
 		void hp_dmg_add(int dmg)
 		{
 			m_hp -= dmg;
+		}
+
+		[[nodiscard]] Ship_type weight_class() const
+		{
+			return m_weight_class;
+		}
+
+		[[nodiscard]] int broadside() const
+		{
+			int dmg{};
+			for(const auto& [key, val] : m_cannons)
+			{
+				for(int i = 0; i < val->amount(); ++i)
+				{
+					dmg += val->damage();					
+				}
+			}
+			return dmg;
 		}
 
 	protected:

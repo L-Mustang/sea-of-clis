@@ -11,6 +11,7 @@ namespace Soc
 		virtual void amount(int amount) = 0;
 		[[nodiscard]] virtual int price() const = 0;
 		virtual void price(int price) = 0;
+		[[nodiscard]] virtual std::shared_ptr<Tradable> copy() const = 0;
 	};
 }
 
