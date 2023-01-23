@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifndef SOC_LOGGER_H
 #define SOC_LOGGER_H
 
@@ -128,6 +130,8 @@ namespace Soc
 		    ss << std::fixed << value;
 		    return ss.str();
 		}
+
+		static std::string to_upper(std::string str);
 
 	private:
 		std::filesystem::path m_filepath;

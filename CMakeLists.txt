@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(sea-of-clis)
 
 # delete the cmake cache after changing these options for it to have effect
-option(USE_LIBS "Use the Win32 API, C Run-time, Clang AddressSanitizer for platform-specific console clearing and debugging features" ON)
+option(USE_LIBS "Use the Win32 API, C Run-time, Clang AddressSanitizer for platform-specific console clearing and debugging features" OFF)
 option(USE_CRT "Use the C Run-time library for memory leak detection" OFF)
 option(USE_ASAN "Use AddressSanitizer" OFF)
 option(USE_HOT_RELOAD "Use Hot Reload in VS" ON)

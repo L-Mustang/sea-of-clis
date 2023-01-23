@@ -12,4 +12,11 @@ namespace Soc
 	{
 		m_filestream.close();
 	}
+
+	std::string Logger::to_upper(std::string str)
+	{
+		std::string res = std::move(str);
+		std::ranges::transform(res, res.begin(), ::toupper);
+		return res;
+	}
 }

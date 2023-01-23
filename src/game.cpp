@@ -171,7 +171,7 @@ namespace Soc
 	void Game::harbor_buy_goods()
 	{
 		m_console->clear(m_status_bar); // Setup
-		m_console->write("GOODS TRADER\n");
+		m_console->write(std::format("{} GOODS TRADER\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_harbor_goods);
 		m_console->write("\nPlease enter the number of the good you'd wish to buy, or [0] to return:");
 		const int key = m_console->read(m_harbor_goods); // Get type
@@ -195,7 +195,7 @@ namespace Soc
 	void Game::harbor_sell_goods()
 	{
 		m_console->clear(m_status_bar); // Setup
-		m_console->write("GOODS TRADER\n");
+		m_console->write(std::format("{} GOODS TRADER\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_player_ship->cargo());
 		m_console->write("\nPlease enter the number of the good you'd wish to sell, or [0] to return:");
 		const int key = m_console->read(m_player_ship->cargo()); // Get type
@@ -247,7 +247,7 @@ namespace Soc
 		const auto cannons_filtered = Utils::Map::filter_view(m_player_ship->cannons_types(), m_harbor_cannons);
 		// Must get compatible cannons
 		m_console->clear(m_status_bar); // Setup
-		m_console->write("IRONWORKS\n");
+		m_console->write(std::format("{} IRONWORKS\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(cannons_filtered);
 		m_console->write("\nPlease enter the number of the cannons you'd wish to buy, or [0] to return:");
 		const Cannons_type key = m_console->read(cannons_filtered); // Get type
@@ -274,7 +274,7 @@ namespace Soc
 	void Game::harbor_sell_cannons()
 	{
 		m_console->clear(m_status_bar); // Setup
-		m_console->write("IRONWORKS\n");
+		m_console->write(std::format("{} IRONWORKS\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_player_ship->cannons());
 		m_console->write("\nPlease enter the number of the cannons you'd wish to sell, or [0] to return:");
 		const Cannons_type key = m_console->read(m_player_ship->cannons()); // Get type
@@ -298,7 +298,7 @@ namespace Soc
 	void Game::harbor_buy_ships()
 	{
 		m_console->clear(m_status_bar); // Setup
-		m_console->write("SHIPYARD\n");
+		m_console->write(std::format("{} SHIPYARD\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_harbor_ships);
 		m_console->write("\nPlease enter the number of the ship you'd wish to buy, or [0] to return:");
 		int key{};
@@ -351,7 +351,7 @@ namespace Soc
 	void Game::harbor_repair()
 	{
 		m_console->clear(m_status_bar); // Setup
-		m_console->write("SHIPYARD\n");
+		m_console->write(std::format("{} SHIPYARD\n", Logger::to_upper(m_player_harbor->harbor())));
 		if (m_player_ship->hp_dmg() == 0) // Check if ship is repaired
 		{
 			m_console->write("Your vessel is in pristine condition. There is no need for repairs.");
@@ -371,7 +371,7 @@ namespace Soc
 	void Game::harbor_set_sail()
 	{
 		m_console->clear(m_status_bar);
-		m_console->write("PORT\n");
+		m_console->write(std::format("{} PORT\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_harbors);
 		m_console->write("\nPlease enter the number of the port you'd wish to sail to, or [0] to return:");
 		const int key = m_console->read(m_harbors); // Get type
