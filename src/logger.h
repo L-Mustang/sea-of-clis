@@ -1,7 +1,6 @@
 #ifndef SOC_LOGGER_H
 #define SOC_LOGGER_H
 
-
 namespace Soc
 {
 	class Logger {
@@ -58,17 +57,10 @@ namespace Soc
 			return res;
 		}
 
-		void wait()
-		{
-			write("[...]");
-			std::cin.get();
-		}
-
 		template <typename K, typename T>
 		[[nodiscard]] K read(const std::map<K, T>& map)
 		{
 			K in{};
-			T res{};
 			std::cin >> in;
 			while (!std::cin || !(map.contains(in) || static_cast<int>(in) == 0)) {
 				write("Incorrect input, try again");
@@ -78,8 +70,14 @@ namespace Soc
 			}
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			m_filestream << res << std::endl;
+			m_filestream << in << std::endl;
 			return in;
+		}
+
+		void wait()
+		{
+			write("[...]");
+			std::cin.get();
 		}
 
 		[[nodiscard]] int read(const int max, const int min = 0)

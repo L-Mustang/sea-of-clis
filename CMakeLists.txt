@@ -10,18 +10,18 @@ find_package(unofficial-sqlite3 REQUIRED)
 
 add_executable(${PROJECT_NAME}
 	"${CMAKE_CURRENT_SOURCE_DIR}/icon.rc"
-	"src/main.cpp"
-	"src/ship.cpp"
-	"src/harbor.cpp"
-    "src/goods.cpp"
-	"src/filesystem/sqlite_3.cpp"
-	"src/game.cpp"
+	"src/cannons.cpp"
+	"src/cannons_heavy.cpp"
 	"src/cannons_light.cpp"
 	"src/cannons_medium.cpp"
-	"src/cannons_heavy.cpp"
-	"src/cannons.cpp"
 	"src/cannons_type.cpp"
-	"src/logger.cpp"
+	"src/filesystem/sqlite_3.cpp"
+	"src/game.cpp"
+	"src/goods.cpp"
+	"src/harbor.cpp"
+    "src/logger.cpp"
+	"src/main.cpp"
+	"src/ship.cpp"
 	"src/ship_small.cpp"
 	"src/ship_type.cpp"
 )
@@ -33,9 +33,8 @@ if(USE_LIBS)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE
 		USE_LIBS # include Windows.h
 	)
-
 	if(USE_ASAN)
-		message("Building with AdressSanitizer support")
+		message("Building with AddressSanitizer support")
 		if(MSVC)
 			target_compile_options(${PROJECT_NAME} PUBLIC /fsanitize=address)
 		else() # ^^^ msvc / other vvv
@@ -50,8 +49,6 @@ if(USE_LIBS)
 		)
 	endif() # USE_CRT
 endif() # USE_LIBS
-
-
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "sea_of_clis")
 
