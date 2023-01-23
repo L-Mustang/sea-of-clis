@@ -3,6 +3,10 @@
   "name": "sea-of-clis",
   "version": "0.0.0",
   "dependencies": [
-    "sqlite3"
-  ]
+    {
+      "name": "sqlite3",
+      "version>=": "3.40.0"
+    }
+  ],
+  "builtin-baseline": "e69dd972ba64840955f46704ecce6241bf607c0f"
 }
