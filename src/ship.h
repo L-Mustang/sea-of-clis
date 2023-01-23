@@ -110,7 +110,8 @@ namespace Soc {
 		 * @param cannon Shared pointer to the cannon
 		 * @return True if successful, false otherwise
 		 */
-		virtual bool cannons_add(Cannons_type key, int amount, std::shared_ptr<Cannons> cannon);\/**
+		virtual bool cannons_add(Cannons_type key, int amount, std::shared_ptr<Cannons> cannon);
+		/**
 		 * @brief Removes cannons from the ship
 		 * @param key Key of cannon
 		 * @param amount Amount
