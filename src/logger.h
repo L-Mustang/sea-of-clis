@@ -45,6 +45,23 @@ namespace Soc
 			}
 		}
 		/**
+		 * @brief Writes map values and keys to outputs
+		 * @tparam K Key type, must implement operator<<
+		 * @tparam T Value type, must implement operator<<
+		 * @param map Map
+		 */
+		template <typename K, typename T>
+		void write(const std::map<K, std::shared_ptr<T>>& map)
+		{
+			int i = 1;
+			for (auto& [key, val] : map)
+			{
+				m_filestream << std::right << std::setw(4) << std::format("[{}]", i) << *val << std::endl;
+				std::cout << std::left << std::setw(4) << std::format("[{}]", i) << *val << std::endl;
+				++i;
+			}
+		}
+		/**
 		 * @brief Waits for valid input
 		 * @tparam T Input type, must implement operator>>
 		 * @return Valid input
