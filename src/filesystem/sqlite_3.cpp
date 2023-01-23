@@ -4,6 +4,7 @@
 #include <harbor.h>
 #include <ship.h>
 #include <ship_small.h>
+#include <ship_type.h>
 
 #include <sqlite3.h>
 

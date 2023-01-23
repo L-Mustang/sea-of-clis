@@ -1,46 +1,16 @@
 #include <goods.h>
+
 #include <random/random.h>
 
 namespace Soc
 {
-	Goods::Goods(int id, std::string goods, int min_amount, int max_amount, int min_price, int max_price) : m_id(id),
+	Goods::Goods(const int id, std::string goods, const int min_amount,
+		const int max_amount, const int min_price, const int max_price):
+		m_id(id),
 		m_goods(std::move(goods)),
 		m_amount(Random::random(min_amount, max_amount)),
 		m_price(Random::random(min_price, max_price))
 	{
-	}
-
-	Goods::~Goods() = default;
-
-	Goods::Goods(const Goods& other) = default;
-
-	Goods::Goods(Goods&& other) noexcept: m_id(other.m_id),
-	                                      m_goods(std::move(other.m_goods)),
-	                                      m_amount(other.m_amount),
-	                                      m_price(other.m_price)
-	{
-	}
-
-	Goods& Goods::operator=(const Goods& other)
-	{
-		if (this == &other)
-			return *this;
-		m_id = other.m_id;
-		m_goods = other.m_goods;
-		m_amount = other.m_amount;
-		m_price = other.m_price;
-		return *this;
-	}
-
-	Goods& Goods::operator=(Goods&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		m_id = other.m_id;
-		m_goods = std::move(other.m_goods);
-		m_amount = other.m_amount;
-		m_price = other.m_price;
-		return *this;
 	}
 
 	std::string Goods::goods() const
@@ -53,7 +23,7 @@ namespace Soc
 		return m_amount;
 	}
 
-	void Goods::amount(int amount)
+	void Goods::amount(const int amount)
 	{
 		m_amount = amount;
 	}
@@ -63,7 +33,7 @@ namespace Soc
 		return m_price;
 	}
 
-	void Goods::price(int price)
+	void Goods::price(const int price)
 	{
 		m_price = price;
 	}

@@ -21,6 +21,9 @@ add_executable(${PROJECT_NAME}
 	"src/cannons_heavy.cpp"
 	"src/cannons.cpp"
 	"src/cannons_type.cpp"
+	"src/logger.cpp"
+	"src/ship_small.cpp"
+	"src/ship_type.cpp"
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)

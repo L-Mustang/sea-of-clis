@@ -6,18 +6,13 @@ namespace Soc
 {
 	class Logger {
 	public:
-		explicit Logger(std::filesystem::path log) : m_filepath(std::move(log))
-		{
-			create_directory(m_filepath.parent_path());
-			m_filestream.open(m_filepath /= std::format("log_{:%d_%m_%Y__%H_%M_%OS}.txt", std::chrono::system_clock::now()), std::ios::app);
-		}
+		explicit Logger(std::filesystem::path log);
+		~Logger();
+		Logger(const Logger& other) = delete;
+		Logger(Logger&& other) noexcept = delete;
+		Logger& operator=(const Logger& other) = delete;
+		Logger& operator=(Logger&& other) noexcept = delete;
 
-		~Logger()
-		{
-			m_filestream.close();
-		}
-
-		
 		template <typename... Args>
 		void write(const Args&... args)
 		{
@@ -26,7 +21,7 @@ namespace Soc
 		} 
 
 		template <typename K, typename T>
-		void write(std::map<K, T> vec)
+		void write(const std::map<K, T>& vec)
 		{
 			int i = 1;
 			for (auto& [key, val] : vec)
@@ -87,7 +82,7 @@ namespace Soc
 			return in;
 		}
 
-		[[nodiscard]] int read(int max, int min = 0)
+		[[nodiscard]] int read(const int max, const int min = 0)
 		{
 			int res;
 			std::cin >> res;
@@ -107,7 +102,7 @@ namespace Soc
 		void clear(F& cb = [](){})
 		{
 			static_assert(std::is_invocable_v<F>, "Type F must be an invocable lambda");
-#ifdef USE_WIN32
+#ifdef USE_LIBS
 			m_filestream << ("\n[CONSOLE CLEARED]\n") << std::endl;
 #ifdef _WIN32
 			constexpr COORD tl = { 0,0 };
@@ -119,10 +114,10 @@ namespace Soc
 			FillConsoleOutputCharacter(console, ' ', cells, tl, &written);
 			FillConsoleOutputAttribute(console, s.wAttributes, cells, tl, &written);
 			SetConsoleCursorPosition(console, tl);
-#else // ^^^ windows / other vvv
+#else // ^^^ windows / other os vvv
 			std::cout << "\033[2J\033[1; 1H";
 #endif // _WIN32
-#endif // USE_WIN32
+#endif // USE_LIBS
 			cb();
 		}
 

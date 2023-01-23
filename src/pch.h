@@ -15,20 +15,21 @@
 
 #include <sqlite3.h>
 
+#include <algorithm>
+#include <chrono>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
+#include <functional>
 #include <iostream>
+#include <iostream>
+#include <map>
 #include <memory>
+#include <random>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <random>
-#include <fstream>
-#include <chrono>
-#include <map>
-#include <set>
-#include <functional>
-#include <algorithm>
 
 
 #endif // SOC_PCH_H
