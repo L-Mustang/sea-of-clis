@@ -116,9 +116,9 @@ namespace Soc::Filesystem
 	{
 		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
-			const auto harbors = static_cast<std::map<int, std::shared_ptr<Harbor>>*>(res);
+			const auto harbors_ = static_cast<std::map<int, std::shared_ptr<Harbor>>*>(res);
 			const int key = std::stoi(std::string{records[0]});
-			harbors->at(key)->distance(
+			harbors_->at(key)->distance(
 				std::stoi(std::string{records[1]}
 				));
 			return 0;

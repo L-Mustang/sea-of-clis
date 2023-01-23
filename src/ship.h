@@ -37,7 +37,7 @@ namespace Soc {
 		[[nodiscard]] virtual std::set<Cannons_type> cannons_types() const;
 		virtual void cargo_update_prices(const std::map<int, std::shared_ptr<Goods>>& from);
 		[[nodiscard]] virtual int price() const;
-		virtual void price(const int price);
+		virtual void price(int price);
 		[[nodiscard]] virtual int hp() const;
 		[[nodiscard]] virtual int hp_max() const;
 		[[nodiscard]] virtual int hp_dmg() const;

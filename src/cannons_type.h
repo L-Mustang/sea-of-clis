@@ -13,7 +13,7 @@ namespace Soc
 
 	std::ostream& operator<<(std::ostream& os, const Cannons_type& obj);
 	std::istream& operator>>(std::istream& is, Cannons_type& obj);
-};
+}
 
 template <>
 struct std::formatter<Soc::Cannons_type> : std::formatter<string>

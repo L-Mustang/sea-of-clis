@@ -16,7 +16,7 @@ namespace Soc
 	std::string Logger::to_upper(std::string str)
 	{
 		std::string res = std::move(str);
-		std::ranges::transform(res, res.begin(), ::toupper);
+		std::ranges::transform(res, res.begin(), toupper);
 		return res;
 	}
 }

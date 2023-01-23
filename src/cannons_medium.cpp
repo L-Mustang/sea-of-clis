@@ -5,7 +5,7 @@
 
 namespace Soc
 {
-	Cannons_medium::Cannons_medium(int min_amount, int max_amount, int price): Cannons(
+	Cannons_medium::Cannons_medium(const int min_amount, const int max_amount, const int price): Cannons(
 		"18-pounder medium guns", min_amount, max_amount, price)
 	{
 	}

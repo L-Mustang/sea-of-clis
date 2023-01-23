@@ -3,7 +3,7 @@
 
 namespace Soc
 {
-	class Tradable
+	class Tradable // NOLINT
 	{
 	public:
 		virtual ~Tradable() = default;

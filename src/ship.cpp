@@ -4,6 +4,7 @@
 #include <cannons_type.h>
 #include <goods.h>
 #include <logger.h>
+#include <ranges>
 #include <ship_type.h>
 #include <utils/map.h>
 
@@ -164,9 +165,11 @@ namespace Soc
 	int Ship::broadside() const
 	{
 		int dmg{};
-		for (const auto& [key, val] : m_cannons)
+		// values_view can be useful for extracting values from associative containers
+		// https://en.cppreference.com/w/cpp/ranges/values_view
+		for (const auto& val : m_cannons | std::views::values) 
 		{
-			for (int i = 0; i < val->amount(); ++i)
+			for (int i = 0; i < val->amount(); ++i) // 
 			{
 				dmg += val->damage();
 			}

@@ -45,7 +45,7 @@ namespace Soc
 		std::erase(m_goods, goods);
 	}
 
-	void Harbor::distance(int distance)
+	void Harbor::distance(const int distance)
 	{
 		m_distance = distance;
 	}
@@ -55,7 +55,7 @@ namespace Soc
 		return m_distance > 0 ? m_distance : 0;
 	}
 
-	void Harbor::distance_remove(int distance)
+	void Harbor::distance_remove(const int distance)
 	{
 		m_distance -= distance;
 	}

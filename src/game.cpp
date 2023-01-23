@@ -23,7 +23,7 @@ namespace Soc
 		m_harbors(m_filesystem->harbors()),
 		m_harbor_ships(m_filesystem->ships()),
 		m_console(std::make_unique<Logger>(std::filesystem::path{ "logs/" })),
-		m_status_bar([&]() {	m_console->write(*this); })
+		m_status_bar([&] {	m_console->write(*this); })
 	{
 		m_player_harbor = Utils::Map::random(m_harbors);
 		m_player_ship = Utils::Map::random(m_harbor_ships);

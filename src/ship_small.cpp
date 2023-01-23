@@ -5,7 +5,7 @@
 namespace Soc
 {
 	Ship_small::Ship_small(const int id, std::string type, const int price, const int cargo_max,
-		const int cannons_max, const int hp, Ship_type weight_class):
+		const int cannons_max, const int hp, const Ship_type weight_class):
 		Ship(id, std::move(type), price, cargo_max, cannons_max, hp, weight_class)
 	{
 	}

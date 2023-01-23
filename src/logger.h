@@ -1,5 +1,3 @@
-#include <utility>
-
 #ifndef SOC_LOGGER_H
 #define SOC_LOGGER_H
 
@@ -99,7 +97,7 @@ namespace Soc
 		}
 
 		template<typename F>
-		void clear(F& cb = [](){})
+		void clear(F& cb = [] {})
 		{
 			static_assert(std::is_invocable_v<F>, "Type F must be an invocable lambda");
 #ifdef USE_LIBS
