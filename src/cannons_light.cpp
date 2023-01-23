@@ -1,14 +1,16 @@
 #include <cannons_light.h>
 
-#include <random/random.h>
 #include <tradable.h>
+#include <random/random.h>
 
 namespace Soc
 {
-	Cannons_light::Cannons_light(int min_amount, int max_amount, int price): Cannons("12-pounder short guns", min_amount, max_amount, price)
-	{}
+	Cannons_light::Cannons_light(const int min_amount, const int max_amount, const int price): Cannons(
+		"12-pounder short guns", min_amount, max_amount, price)
+	{
+	}
 
-	int Cannons_light::damage()
+	int Cannons_light::damage() const
 	{
 		return Random::random(0, 2);
 	}

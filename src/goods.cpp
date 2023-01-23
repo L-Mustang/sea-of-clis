@@ -3,49 +3,14 @@
 
 namespace Soc
 {
-	Goods::Goods(int id, std::string goods, int amount, int price) : m_id(id),
-		m_goods(std::move(goods)),
-		m_amount(amount),
-		m_price(price)
-	{}
-
 	Goods::Goods(int id, std::string goods, int min_amount, int max_amount, int min_price, int max_price) : m_id(id),
 		m_goods(std::move(goods)),
 		m_amount(Random::random(min_amount, max_amount)),
 		m_price(Random::random(min_price, max_price))
-	{}
+	{
+	}
 
 	Goods::~Goods() = default;
-
-	std::string Goods::goods() const
-	{
-		return m_goods;
-	}
-
-	int Goods::amount() const
-	{
-		return m_amount;
-	}
-
-	void Goods::amount(int amount)
-	{
-		m_amount = amount;
-	}
-
-	int Goods::price() const
-	{
-		return m_price;
-	}
-
-	void Goods::price(int price)
-	{
-		m_price = price;
-	}
-
-	std::shared_ptr<Tradable> Goods::copy() const
-	{
-		return std::make_shared<Goods>(*this);
-	}
 
 	Goods::Goods(const Goods& other) = default;
 
@@ -76,6 +41,36 @@ namespace Soc
 		m_amount = other.m_amount;
 		m_price = other.m_price;
 		return *this;
+	}
+
+	std::string Goods::goods() const
+	{
+		return m_goods;
+	}
+
+	int Goods::amount() const
+	{
+		return m_amount;
+	}
+
+	void Goods::amount(int amount)
+	{
+		m_amount = amount;
+	}
+
+	int Goods::price() const
+	{
+		return m_price;
+	}
+
+	void Goods::price(int price)
+	{
+		m_price = price;
+	}
+
+	std::shared_ptr<Tradable> Goods::copy() const
+	{
+		return std::make_shared<Goods>(*this);
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Goods& obj)

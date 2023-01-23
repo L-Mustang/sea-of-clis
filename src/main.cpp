@@ -19,7 +19,7 @@ int main()
 		//*c_ptr = 5;
 		//const int* cxx_ptr = new int(5);
 
-		//free(c_ptr); // uncomment along with above block for address sanitizer
+		//free(c_ptr); // uncomment along with above block for address sanitizer check
 		//delete cxx_ptr;
 		//printf("%d%% \n", *c_ptr);
 		//std::cout << *cxx_ptr << std::endl;

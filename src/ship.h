@@ -1,8 +1,7 @@
-	#ifndef SOC_SHIP_H
+#ifndef SOC_SHIP_H
 #define SOC_SHIP_H
 
 #include <cannons.h>
-#include <cannons_small.h>
 #include <cannons_type.h>
 #include <ostream>
 #include <utility>

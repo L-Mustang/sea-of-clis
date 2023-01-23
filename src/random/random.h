@@ -8,10 +8,8 @@ namespace Soc::Random
 	{
 		static std::random_device dev;
 		static std::mt19937 gen(dev());
-		std::conditional_t<std::is_integral_v<T>, // Check if integral, otherwise real
-		                 std::uniform_int_distribution<T>,
-		                 std::uniform_real_distribution<T>
-		> dis(low, high);
+		std::conditional_t<std::is_integral_v<T>, std::uniform_int_distribution<T>, std::uniform_real_distribution<T>>
+			dis(low, high); // check whether integral or real
 		return dis(gen);
 	}
 }

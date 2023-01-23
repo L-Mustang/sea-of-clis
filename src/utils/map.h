@@ -129,4 +129,5 @@ namespace Soc::Utils::Map
 	}
 
 }
+
 #endif // SOC_UTILS_MAP_H

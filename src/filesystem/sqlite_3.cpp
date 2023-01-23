@@ -1,11 +1,11 @@
+#include <filesystem/sqlite_3.h>
+
 #include <goods.h>
 #include <harbor.h>
-#include <filesystem/sqlite_3.h>
 #include <ship.h>
 #include <ship_small.h>
 
 #include <sqlite3.h>
-
 
 namespace Soc::Filesystem
 {
@@ -28,11 +28,11 @@ namespace Soc::Filesystem
 		{
 			const auto goods = static_cast<std::map<int, std::shared_ptr<Harbor>>*>(res);
 			goods->emplace(
-				std::stoi(std::string{ records[0] }),
+				std::stoi(std::string{records[0]}),
 				std::make_shared<Harbor>(
-					std::stoi(std::string{ records[0] }),
-					std::string{ records[1] }
-			));
+					std::stoi(std::string{records[0]}),
+					std::string{records[1]}
+				));
 			return 0;
 		};
 		const std::string query = "SELECT * FROM havens";
@@ -41,19 +41,19 @@ namespace Soc::Filesystem
 		return res;
 	}
 
-	std::map<int, std::shared_ptr<Goods>> Sqlite_3::goods(int harbor_id) const
+	std::map<int, std::shared_ptr<Goods>> Sqlite_3::goods(const int harbor_id) const
 	{
 		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
 			const auto goods = static_cast<std::map<int, std::shared_ptr<Goods>>*>(res);
 			goods->emplace(
-				std::stoi(std::string{ records[0] }),
-				std::make_shared<Goods>( std::stoi(std::string{ records[0]}),
-				std::string{ records[1] },
-				std::stoi(std::string{ records[2] }),
-				std::stoi(std::string{ records[3] }),
-				std::stoi(std::string{ records[4] }),
-				std::stoi(std::string{ records[5] })
+				std::stoi(std::string{records[0]}),
+				std::make_shared<Goods>(std::stoi(std::string{records[0]}),
+				                        std::string{records[1]},
+				                        std::stoi(std::string{records[2]}),
+				                        std::stoi(std::string{records[3]}),
+				                        std::stoi(std::string{records[4]}),
+				                        std::stoi(std::string{records[5]})
 				));
 			return 0;
 		};
@@ -96,14 +96,14 @@ namespace Soc::Filesystem
 			if (pec.contains("klein"))
 			{
 				ships.emplace(id, std::make_shared<Ship_small>(
-					id, type, price, cargo_max, cannons_max, hp, weight_class
-					));
+					              id, type, price, cargo_max, cannons_max, hp, weight_class
+				              ));
 			}
 			else
 			{
 				ships.emplace(id, std::make_shared<Ship>(
-					id, type, price, cargo_max, cannons_max, hp, weight_class
-					));
+					              id, type, price, cargo_max, cannons_max, hp, weight_class
+				              ));
 			}
 		};
 
@@ -111,15 +111,15 @@ namespace Soc::Filesystem
 		return ships;
 	}
 
-	void Sqlite_3::harbors_distances(int harbor_id, std::map<int, std::shared_ptr<Harbor>>& harbors)
+	void Sqlite_3::harbors_distances(const int harbor_id, std::map<int, std::shared_ptr<Harbor>>& harbors) const
 	{
 		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
 			const auto harbors = static_cast<std::map<int, std::shared_ptr<Harbor>>*>(res);
-			const int key = std::stoi(std::string{ records[0] });
+			const int key = std::stoi(std::string{records[0]});
 			harbors->at(key)->distance(
-				std::stoi(std::string{ records[1] }
-			));
+				std::stoi(std::string{records[1]}
+				));
 			return 0;
 		};
 		const std::string query1 = std::format(
@@ -139,7 +139,7 @@ namespace Soc::Filesystem
 		exec_query(query2, cb, &harbors);
 	}
 
-	std::set<std::string> Sqlite_3::peculiarities(int ship_id) const
+	std::set<std::string> Sqlite_3::peculiarities(const int ship_id) const
 	{
 		auto cb = [](void* res, [[maybe_unused]] int col_count, char** records, [[maybe_unused]] char** col_names)
 		{
@@ -164,12 +164,14 @@ namespace Soc::Filesystem
 	void Sqlite_3::exec_query_ext(const std::string& query, const std::function<void(sqlite3_stmt*)>& cb) const
 	{
 		sqlite3_stmt* stmt = nullptr;
-		if (sqlite3_prepare_v2(m_db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+		if (sqlite3_prepare_v2(m_db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+		{
 			sqlite3_finalize(stmt);
 			throw std::runtime_error(sqlite3_errmsg(m_db));
 		}
 
-		while (sqlite3_step(stmt) == SQLITE_ROW) {
+		while (sqlite3_step(stmt) == SQLITE_ROW)
+		{
 			cb(stmt);
 		}
 		sqlite3_finalize(stmt);

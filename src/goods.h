@@ -3,18 +3,19 @@
 
 #include <tradable.h>
 
+
 namespace Soc
 {
 	class Goods final : public Tradable
 	{
 	public:
-		Goods(int id, std::string goods, int amount, int price);
 		Goods(int id, std::string goods, int min_amount, int max_amount, int min_price, int max_price);
+		~Goods() override;
 		Goods(const Goods& other);
 		Goods(Goods&& other) noexcept;
 		Goods& operator=(const Goods& other);
 		Goods& operator=(Goods&& other) noexcept;
-		~Goods() override;
+
 		[[nodiscard]] std::string goods() const;
 		[[nodiscard]] int amount() const override;
 		void amount(int amount) override;

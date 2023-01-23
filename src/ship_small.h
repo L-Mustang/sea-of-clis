@@ -2,7 +2,6 @@
 #define SOC_SHIP_SMALL_H
 
 #include <cannons.h>
-#include <cannons_small.h>
 #include <cannons_type.h>
 #include <ship.h>
 #include <ship_type.h>

@@ -43,7 +43,7 @@ namespace Soc
 			m_console->wait();
 		}
 
-		void game_over()
+		void game_over() const
 		{
 			m_console->clear(m_status_bar);
 			m_console->write("\nYOU DIED\n");
@@ -499,10 +499,10 @@ namespace Soc
 			m_is_fighting = false;
 		}
 
-		[[nodiscard]] int sea_escape(std::shared_ptr<Ship> pirate_ship)
+		[[nodiscard]] int sea_escape(const std::shared_ptr<Ship>& pirate_ship) const
 		{
 			int chance{};
-			switch (m_player_ship->weight_class())
+			switch (m_player_ship->weight_class()) // NOLINT
 			{
 			case Ship_type::light:
 			{
@@ -521,7 +521,7 @@ namespace Soc
 			}
 			default: break;
 			}
-			switch (pirate_ship->weight_class())
+			switch (pirate_ship->weight_class()) // NOLINT
 			{
 			case Ship_type::normal:
 			{
@@ -533,7 +533,7 @@ namespace Soc
 				chance += 25;
 				break;
 			}
-			case Ship_type::light: break;
+			case Ship_type::light: break; // NOLINT
 			default: break;
 			}
 			return chance;
@@ -543,7 +543,7 @@ namespace Soc
 		{
 			m_console->clear(m_status_bar);
 			constexpr int speed = 1;
-			int wind = Random::random(1, 20);
+			const int wind = Random::random(1, 20);
 
 			if (wind <= 2) // https://education.nationalgeographic.org/resource/beaufort-scale
 			{
@@ -583,13 +583,13 @@ namespace Soc
 			else
 			{
 				m_console->write("A storm!");
-				wind = Random::random(1, 100);
-				if (wind <= 40)
+				const int chance = Random::random(1, 100);
+				if (chance <= 40)
 				{
 					m_player_harbor->distance_remove(-speed);
 					m_console->write("Our ship drifted a day off course");
 				}
-				else if (wind <= 60)
+				else if (chance <= 60)
 				{
 					m_player_harbor->distance_remove(speed);
 					m_console->write("Our ship is a day closer to its destination");

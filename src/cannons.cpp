@@ -1,14 +1,15 @@
 #include <cannons.h>
-#include <random/random.h>
 
+#include <random/random.h>
 
 namespace Soc
 {
-	Cannons::Cannons(std::string cannons, int min_amount, int max_amount, int price):
+	Cannons::Cannons(std::string cannons, const int min_amount, const int max_amount, const int price):
 		m_cannons(std::move(cannons)),
 		m_amount(Random::random(min_amount, max_amount)),
 		m_price(price)
-	{}
+	{
+	}
 
 	std::string Cannons::cannons() const
 	{
@@ -20,7 +21,7 @@ namespace Soc
 		return m_amount;
 	}
 
-	void Cannons::amount(int amount)
+	void Cannons::amount(const int amount)
 	{
 		m_amount = amount;
 	}
@@ -30,14 +31,9 @@ namespace Soc
 		return m_price;
 	}
 
-	void Cannons::price(int price)
+	void Cannons::price(const int price)
 	{
 		m_price = price;
-	}
-
-	int Cannons::damage()
-	{
-		return Random::random(0, 4);
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Cannons& obj)

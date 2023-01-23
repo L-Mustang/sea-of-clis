@@ -15,7 +15,7 @@ namespace Soc
 		void amount(int amount) override;
 		[[nodiscard]] int price() const override;
 		void price(int price) override;
-		virtual int damage() = 0;
+		[[nodiscard]] virtual int damage() const = 0;
 	protected:
 		std::string m_cannons;
 		int m_amount;

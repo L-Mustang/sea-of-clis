@@ -5,32 +5,14 @@ namespace Soc
 {
 	enum class Cannons_type : int
 	{
-		invalid,
-		light,
-		medium,
-		heavy
+		invalid = 0,
+		light = 1,
+		medium = 2,
+		heavy = 3
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const Cannons_type& obj)
-	{
-		// https://stackoverflow.com/a/11421489/10787114
-		return os << static_cast<std::underlying_type_t<Cannons_type>>(obj);
-	}
-
-	inline std::istream& operator>>(std::istream& is, Cannons_type& obj)
-	{
-		int res{};
-		if (is >> res)
-		{
-			if (!(res < static_cast<int>(Cannons_type::invalid) || res > static_cast<int>(Cannons_type::heavy)))
-			{
-				obj = static_cast<Cannons_type>(res);
-				return is;
-			}
-		}
-		is.setstate(std::ios_base::failbit);
-		return is;
-	}
+	std::ostream& operator<<(std::ostream& os, const Cannons_type& obj);
+	std::istream& operator>>(std::istream& is, Cannons_type& obj);
 };
 
 template <>

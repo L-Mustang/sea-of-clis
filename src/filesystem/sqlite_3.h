@@ -3,7 +3,6 @@
 
 #include <filesystem/filesystem.h>
 
-
 namespace Soc::Filesystem
 {
 	class Sqlite_3 final : public Filesystem
@@ -19,7 +18,7 @@ namespace Soc::Filesystem
 		[[nodiscard]] std::map<int, std::shared_ptr<Harbor>> harbors() const override;
 		[[nodiscard]] std::map<int, std::shared_ptr<Goods>> goods(int harbor_id) const override;
 		[[nodiscard]] std::map<int, std::shared_ptr<Ship>> ships() const override;
-		void harbors_distances(int harbor_id, std::map<int, std::shared_ptr<Harbor>>& harbors) override;
+		void harbors_distances(int harbor_id, std::map<int, std::shared_ptr<Harbor>>& harbors) const override;
 	private:
 		sqlite3* m_db;
 

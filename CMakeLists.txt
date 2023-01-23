@@ -20,7 +20,7 @@ add_executable(${PROJECT_NAME}
 	"src/cannons_medium.cpp"
 	"src/cannons_heavy.cpp"
 	"src/cannons.cpp"
-	"src/cannons_small.cpp"
+	"src/cannons_type.cpp"
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
