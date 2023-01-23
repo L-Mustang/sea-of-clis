@@ -3,6 +3,9 @@
 
 namespace Soc
 {
+	/**
+	 * @brief Enumerator for cannon types. Underlying type: int
+	 */
 	enum class Cannons_type : int
 	{
 		invalid = 0,
@@ -15,6 +18,9 @@ namespace Soc
 	std::istream& operator>>(std::istream& is, Cannons_type& obj);
 }
 
+/**
+ * @brief std::format custom formatter for this type
+ */
 template <>
 struct std::formatter<Soc::Cannons_type> : std::formatter<string>
 {

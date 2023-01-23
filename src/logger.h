@@ -5,6 +5,10 @@ namespace Soc
 {
 	class Logger {
 	public:
+		/**
+		 * @brief Constructor
+		 * @param log Filepath to a relative directory (does not have to exist)
+		 */
 		explicit Logger(std::filesystem::path log);
 		~Logger();
 		Logger(const Logger& other) = delete;
@@ -12,35 +16,39 @@ namespace Soc
 		Logger& operator=(const Logger& other) = delete;
 		Logger& operator=(Logger&& other) noexcept = delete;
 
+		/**
+		 * @brief Writes arguments to outputs
+		 * @tparam Args Argument types, must implement operator<<
+		 * @param args Arguments
+		 */
 		template <typename... Args>
 		void write(const Args&... args)
 		{
 			((m_filestream << args << ' '), ...) << std::endl; // C++17 fold expression
 			((std::cout << args << ' '), ...) << std::endl;
 		} 
-
+		/**
+		 * @brief Writes map values and keys to outputs
+		 * @tparam K Key type, must implement operator<<
+		 * @tparam T Value type, must implement operator<<
+		 * @param map Map
+		 */
 		template <typename K, typename T>
-		void write(const std::map<K, T>& vec)
+		void write(const std::map<K, T>& map)
 		{
 			int i = 1;
-			for (auto& [key, val] : vec)
+			for (auto& [key, val] : map)
 			{
 				m_filestream << std::right << std::setw(4) << std::format("[{}]", i) << val << std::endl;
 				std::cout << std::left << std::setw(4) << std::format("[{}]", i) << val << std::endl;
 				++i;
 			}
 		}
-
-		template <typename K, typename T>
-		void write(const std::map<K, std::shared_ptr<T>>& map)
-		{
-			for (const auto& [key, val] : map)
-			{
-				m_filestream << std::left << std::setw(4) << std::format("[{}]", key) << *val << std::endl;
-				std::cout << std::left << std::setw(4) << std::format("[{}]", key) << *val << std::endl;
-			}
-		}
-
+		/**
+		 * @brief Waits for valid input
+		 * @tparam T Input type, must implement operator>>
+		 * @return Valid input
+		 */
 		template <typename T>
 		[[nodiscard]] T read()
 		{
@@ -56,7 +64,12 @@ namespace Soc
 			m_filestream << res << std::endl;
 			return res;
 		}
-
+		/**
+		 * @brief Waits for valid input based on map keys. Valid means the map contains the input as key
+		 * @tparam K Key type, must implement operator>>
+		 * @tparam T Value type
+		 * @return Valid input
+		 */
 		template <typename K, typename T>
 		[[nodiscard]] K read(const std::map<K, T>& map)
 		{
@@ -73,13 +86,20 @@ namespace Soc
 			m_filestream << in << std::endl;
 			return in;
 		}
-
+		/**
+		 * @brief Waits for enter key
+		 */
 		void wait()
 		{
 			write("[...]");
 			std::cin.get();
 		}
-
+		/**
+		 * @brief Waits for valid input within a given range
+		 * @param max Upper bound
+		 * @param min Lower bound
+		 * @return Valid input
+		 */
 		[[nodiscard]] int read(const int max, const int min = 0)
 		{
 			int res;
@@ -95,11 +115,15 @@ namespace Soc
 			m_filestream << res << std::endl;
 			return res;
 		}
-
+		/**
+		 * @brief Clears the console
+		 * @tparam F Invokable type
+		 * @param cb Callback to be executed after clearing
+		 */
 		template<typename F>
 		void clear(F& cb = [] {})
 		{
-			static_assert(std::is_invocable_v<F>, "Type F must be an invocable lambda");
+			static_assert(std::is_invocable_v<F>, "Type F must be an invokable lambda");
 #ifdef USE_LIBS
 			m_filestream << ("\n[CONSOLE CLEARED]\n") << std::endl;
 #ifdef _WIN32
@@ -118,7 +142,12 @@ namespace Soc
 #endif // USE_LIBS
 			cb();
 		}
-
+		/**
+		 * @brief Formats to US locale. Good for large currencies
+		 * @tparam T Type to be formatted
+		 * @param value Value to be formatted
+		 * @return Formatted string
+		 */
 		template<typename T>
 		static std::string format(T value)
 		{
@@ -128,7 +157,11 @@ namespace Soc
 		    ss << std::fixed << value;
 		    return ss.str();
 		}
-
+		/**
+		 * @brief Converts a string to uppercase
+		 * @param str String to be converted
+		 * @return Uppercase string
+		 */
 		static std::string to_upper(std::string str);
 
 	private:

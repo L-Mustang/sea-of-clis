@@ -25,26 +25,6 @@ namespace Soc
 		return m_harbor;
 	}
 
-	void Harbor::harbor(std::string harbor)
-	{
-		m_harbor = std::move(harbor);
-	}
-
-	const std::vector<std::shared_ptr<const Goods>>& Harbor::goods() const
-	{
-		return m_goods;
-	}
-
-	void Harbor::goods_add(const std::shared_ptr<const Goods>& goods)
-	{
-		m_goods.push_back(goods);
-	}
-
-	void Harbor::goods_take(const std::shared_ptr<const Goods>& goods)
-	{
-		std::erase(m_goods, goods);
-	}
-
 	void Harbor::distance(const int distance)
 	{
 		m_distance = distance;

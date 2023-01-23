@@ -2,6 +2,9 @@
 #define SOC_SHIP_TYPE_H
 
 namespace Soc {
+	/**
+	 * @brief Enumerator of ship types
+	 */
 	enum class Ship_type : int
 	{
 		invalid = 0,
