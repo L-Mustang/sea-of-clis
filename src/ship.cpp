@@ -174,7 +174,7 @@ namespace Soc
 				dmg += val->damage();
 			}
 		}
-		return dmg / 2; // Divide damage by 2 because a broadside can only be fired from one side
+		return dmg / 2; // divide damage by 2 because a broadside can only be fired from one side
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Ship& obj)

@@ -24,7 +24,7 @@ namespace Soc
 		template <typename... Args>
 		void write(const Args&... args)
 		{
-			((m_filestream << args << ' '), ...) << std::endl; // C++17 fold expression
+			((m_filestream << args << ' '), ...) << std::endl; // c++17 fold expression
 			((std::cout << args << ' '), ...) << std::endl;
 		} 
 		/**
@@ -53,7 +53,7 @@ namespace Soc
 		[[nodiscard]] T read()
 		{
 			T res{};
-			// It is important to ignore the rest of the line, since operator>>
+			// it is important to ignore the rest of the line, since operator>>
 			// won't extract any data from the stream anymore as it is in a wrong format.
 			// https://stackoverflow.com/a/12722150/10787114
 			while (!(std::cin >> res)) {

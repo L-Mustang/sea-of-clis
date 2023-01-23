@@ -27,7 +27,7 @@ namespace Soc
 	{
 		m_player_harbor = Utils::Map::random(m_harbors);
 		m_player_ship = Utils::Map::random(m_harbor_ships);
-		m_player_ship->price(m_player_ship->price() / 2); // Player's ship should be at 50% of the new price
+		m_player_ship->price(m_player_ship->price() / 2); // player's ship should be at 50% of the new price
 		loop();
 	}
 
@@ -37,7 +37,7 @@ namespace Soc
 	{
 		m_console->clear(m_status_bar);
 		m_console->write("\nVICTORY ACHIEVED\n");
-		m_has_won = true; // Must be set to prevent seeing victory screen repeatedly
+		m_has_won = true; // must be set to prevent seeing victory screen repeatedly
 		m_console->wait();
 	}
 
@@ -55,7 +55,7 @@ namespace Soc
 			harbor();
 			if (m_exit) break;
 			sea();
-			if (m_has_died) // For when you can't game
+			if (m_has_died) // for when you can't game
 			{
 				game_over();
 				break;
@@ -76,11 +76,11 @@ namespace Soc
 		};
 		m_harbor_ships = m_filesystem->ships();
 		m_player_ship->cargo_update_prices(m_harbor_goods);
-		// Must update cargo prices before removing goods where amount =m
-		Utils::Map::random_remove(m_harbor_ships); // Remove, at random, ships
-		Utils::Map::remove_if_none(m_harbor_cannons); // Remove elements where amount rolled 0;
+		// must update cargo prices before removing goods where amount =m
+		Utils::Map::random_remove(m_harbor_ships); // remove, at random, ships
+		Utils::Map::remove_if_none(m_harbor_cannons); // remove elements where amount rolled 0;
 		Utils::Map::remove_if_none(m_harbor_goods);
-		Utils::Map::remove_if_none(m_harbors); // Remove all unreachable harbors
+		Utils::Map::remove_if_none(m_harbors); // remove all unreachable harbors
 	}
 
 	void Game::harbor()
@@ -170,35 +170,35 @@ namespace Soc
 
 	void Game::harbor_buy_goods()
 	{
-		m_console->clear(m_status_bar); // Setup
+		m_console->clear(m_status_bar); // setup
 		m_console->write(std::format("{} GOODS TRADER\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_harbor_goods);
 		m_console->write("\nPlease enter the number of the good you'd wish to buy, or [0] to return:");
-		const int key = m_console->read(m_harbor_goods); // Get type
+		const int key = m_console->read(m_harbor_goods); // get type
 		if (key == 0) return;
 
 		const std::shared_ptr<Goods> good = m_harbor_goods.at(key);
 		const int threshold = std::min({ m_money / good->price(), good->amount(), m_player_ship->cargo_space() });
-		// Calculate threshold
+		// calculate threshold
 		m_console->write(std::format(
 			"Please enter the amount of {} you'd wish to buy (max {}) for ${} p/tonne, or [0] to cancel:",
 			good->goods(), threshold, Logger::format(good->price())
 		));
-		const int amount = m_console->read(threshold); // Get amount
+		const int amount = m_console->read(threshold); // get amount
 		if (amount == 0) return;
 
-		m_player_ship->cargo_add(key, amount, good); // Transaction
+		m_player_ship->cargo_add(key, amount, good); // transaction
 		Utils::Map::decrement_remove_if_none(key, amount, m_harbor_goods);
 		m_money -= good->price() * amount;
 	}
 
 	void Game::harbor_sell_goods()
 	{
-		m_console->clear(m_status_bar); // Setup
+		m_console->clear(m_status_bar); // setup
 		m_console->write(std::format("{} GOODS TRADER\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_player_ship->cargo());
 		m_console->write("\nPlease enter the number of the good you'd wish to sell, or [0] to return:");
-		const int key = m_console->read(m_player_ship->cargo()); // Get type
+		const int key = m_console->read(m_player_ship->cargo()); // get type
 		if (key == 0) return;
 
 		const std::shared_ptr<Goods> good = m_player_ship->cargo().at(key);
@@ -206,10 +206,10 @@ namespace Soc
 			"Please enter the amount of {} you'd wish to sell (max {}) for ${} p/tonne, or [0] to cancel:",
 			good->goods(), good->amount(), Logger::format(good->price())
 		));
-		const int amount = m_console->read(good->amount()); // Get amount
+		const int amount = m_console->read(good->amount()); // get amount
 		if (amount == 0) return;
 
-		m_player_ship->cargo_remove(key, amount); // Transaction
+		m_player_ship->cargo_remove(key, amount); // transaction
 		Utils::Map::increment_add_if_not_found(key, amount, good, m_harbor_goods);
 		m_money += good->price() * amount;
 	}
@@ -245,51 +245,51 @@ namespace Soc
 	void Game::harbor_buy_cannons()
 	{
 		const auto cannons_filtered = Utils::Map::filter_view(m_player_ship->cannons_types(), m_harbor_cannons);
-		// Must get compatible cannons
-		m_console->clear(m_status_bar); // Setup
+		// must get compatible cannons
+		m_console->clear(m_status_bar); // setup
 		m_console->write(std::format("{} IRONWORKS\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(cannons_filtered);
 		m_console->write("\nPlease enter the number of the cannons you'd wish to buy, or [0] to return:");
-		const Cannons_type key = m_console->read(cannons_filtered); // Get type
+		const Cannons_type key = m_console->read(cannons_filtered); // get type
 		if (key == Cannons_type::invalid) return;
 
 		const std::shared_ptr<Cannons> cannon = m_harbor_cannons.at(key);
 		const int threshold = std::min({
 			m_money / cannon->price(), cannon->amount(), m_player_ship->cannons_space()
-			}); // Calculate threshold
+			}); // calculate threshold
 		m_console->write(std::format(
 			"Please enter the amount of {} you'd wish to buy (max {}) for ${} p/piece, or [0] to cancel:",
 			cannon->cannons(), threshold, Logger::format(cannon->price())
 		));
-		const int amount = m_console->read(threshold); // Get amount
+		const int amount = m_console->read(threshold); // get amount
 		if (amount == 0) return;
 
 		const auto cannon_cpy = cannon->copy();
-		cannon_cpy->price(cannon_cpy->price() / 2); // Price of cannon should become 50%
-		m_player_ship->cannons_add(key, amount, std::static_pointer_cast<Cannons>(cannon_cpy)); // Transaction
+		cannon_cpy->price(cannon_cpy->price() / 2); // price of cannon should become 50%
+		m_player_ship->cannons_add(key, amount, std::static_pointer_cast<Cannons>(cannon_cpy)); // transaction
 		Utils::Map::decrement_remove_if_none(key, amount, m_harbor_cannons);
 		m_money -= cannon->price() * amount;
 	}
 
 	void Game::harbor_sell_cannons()
 	{
-		m_console->clear(m_status_bar); // Setup
+		m_console->clear(m_status_bar); // setup
 		m_console->write(std::format("{} IRONWORKS\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_player_ship->cannons());
 		m_console->write("\nPlease enter the number of the cannons you'd wish to sell, or [0] to return:");
-		const Cannons_type key = m_console->read(m_player_ship->cannons()); // Get type
+		const Cannons_type key = m_console->read(m_player_ship->cannons()); // get type
 		if (key == Cannons_type::invalid) return;
 
 		const std::shared_ptr<Cannons> cannon = m_player_ship->cannons().at(key);
 		m_console->write(std::format(
 			"Please enter the amount of {} you'd wish to sell (max {}) for ${} p/piece, or [0] to cancel:",
 			cannon->cannons(), cannon->amount(), Logger::format(cannon->price())));
-		const int amount = m_console->read(cannon->amount()); // Get amount
+		const int amount = m_console->read(cannon->amount()); // get amount
 		if (key == Cannons_type::invalid) return;
 
-		m_player_ship->cannons_remove(key, amount); // Transaction
+		m_player_ship->cannons_remove(key, amount); // transaction
 		const auto cannon_cpy = cannon->copy();
-		cannon_cpy->price(cannon_cpy->price() * 2); // Price of cannon should become 200%
+		cannon_cpy->price(cannon_cpy->price() * 2); // price of cannon should become 200%
 		Utils::Map::increment_add_if_not_found(key, amount, std::static_pointer_cast<Cannons>(cannon_cpy),
 			m_harbor_cannons);
 		m_money += cannon->price() * amount;
@@ -297,14 +297,14 @@ namespace Soc
 
 	void Game::harbor_buy_ships()
 	{
-		m_console->clear(m_status_bar); // Setup
+		m_console->clear(m_status_bar); // setup
 		m_console->write(std::format("{} SHIPYARD\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_harbor_ships);
 		m_console->write("\nPlease enter the number of the ship you'd wish to buy, or [0] to return:");
 		int key{};
 		while (true)
 		{
-			key = m_console->read(m_harbor_ships); // Get type
+			key = m_console->read(m_harbor_ships); // get type
 			if (key == 0) return;
 			if (m_money + m_player_ship->price() >= m_harbor_ships.at(key)->price()) break;
 			m_console->write(std::format("The {} is too expensive, please pick another ship:",
@@ -312,7 +312,7 @@ namespace Soc
 		}
 		const std::shared_ptr<Ship> ship_new = m_harbor_ships.at(key);
 		const std::shared_ptr<Ship> ship_old = m_player_ship;
-		if (ship_old->cargo_amount() != 0 || ship_old->cannons_amount() != 0) // TODO Warning message could be improved
+		if (ship_old->cargo_amount() != 0 || ship_old->cannons_amount() != 0) // TODO warning message could be improved
 		{
 			m_console->write(std::format(
 				"Warning! There are still {} tonnes of cargo and {} cannons on board of your ship.\n"
@@ -334,10 +334,10 @@ namespace Soc
 		{
 			m_money -= ship_new->price();
 			m_money += ship_old->price();
-			m_player_ship = ship_new; // Assign to player and remove new ship for yard
+			m_player_ship = ship_new; // assign to player and remove new ship for yard
 			m_harbor_ships.erase(key);
 			m_player_ship->price(m_player_ship->price() / 2);
-			ship_old->price(ship_old->price() * 2); // Assign old ship to yard, fix price
+			ship_old->price(ship_old->price() * 2); // assign old ship to yard, fix price
 			m_harbor_ships.insert_or_assign(99, ship_old);
 			break;
 		}
@@ -350,9 +350,9 @@ namespace Soc
 
 	void Game::harbor_repair()
 	{
-		m_console->clear(m_status_bar); // Setup
+		m_console->clear(m_status_bar); // setup
 		m_console->write(std::format("{} SHIPYARD\n", Logger::to_upper(m_player_harbor->harbor())));
-		if (m_player_ship->hp_dmg() == 0) // Check if ship is repaired
+		if (m_player_ship->hp_dmg() == 0) // check if ship is repaired
 		{
 			m_console->write("Your vessel is in pristine condition. There is no need for repairs.");
 			m_console->wait();
@@ -374,7 +374,7 @@ namespace Soc
 		m_console->write(std::format("{} PORT\n", Logger::to_upper(m_player_harbor->harbor())));
 		m_console->write(m_harbors);
 		m_console->write("\nPlease enter the number of the port you'd wish to sail to, or [0] to return:");
-		const int key = m_console->read(m_harbors); // Get type
+		const int key = m_console->read(m_harbors); // get type
 		if (key == 0) return;
 		m_player_harbor = m_harbors.at(key);
 		m_at_harbor = false;
@@ -385,22 +385,22 @@ namespace Soc
 		m_at_sea = true;
 		while (m_at_sea)
 		{
-			if (Random::random(1, 100) <= 20) sea_battle(); // Random pirate encounter
-			if (m_has_died) break; // Check whether player died to pirates
+			if (Random::random(1, 100) <= 20) sea_battle(); // random pirate encounter
+			if (m_has_died) break; // check whether player died to pirates
 
 			sea_move();
-			if (m_has_died) break; // Check whether player died to storm
+			if (m_has_died) break; // check whether player died to storm
 
 			if (m_player_harbor->distance() <= 0)
 			{
-				// Check if destination reached
+				// check if destination reached
 				m_console->write(std::format("Land ahoy! We'll be mooring in the port of {}!",
 					m_player_harbor->harbor()));
 				m_console->wait();
 				break;
 			}
 
-			m_console->write(std::format( // End cycle
+			m_console->write(std::format( // end cycle
 				"End of the day",
 				m_player_harbor->distance()
 			));
@@ -418,14 +418,14 @@ namespace Soc
 			{Cannons_type::medium, std::make_shared<Cannons_medium>(999, 999, 200)},
 			{Cannons_type::heavy, std::make_shared<Cannons_heavy>(999, 999, 1000)}
 		};
-		auto cannons = Utils::Map::filter_view(pirate_ship->cannons_types(), m_harbor_cannons); // Remove incompatible
-		for (auto& [key, val] : cannons) // Add random cannons
+		auto cannons = Utils::Map::filter_view(pirate_ship->cannons_types(), m_harbor_cannons); // remove incompatible
+		for (auto& [key, val] : cannons) // add random cannons
 		{
 			if (pirate_ship->cannons_space() != 0)
 			{
-				// Don't add cannons if ship is already full
+				// don't add cannons if ship is already full
 				const int max_amount = pirate_ship->cannons_max() / static_cast<int>(cannons.size());
-				// Generate equal distribution of cannons
+				// generate equal distribution of cannons
 				pirate_ship->cannons_add(key, Random::random(1, max_amount), val);
 			}
 		}
@@ -488,25 +488,25 @@ namespace Soc
 			}
 			default: break;
 			}
-			if (has_surrendered) break; // Check if player surrendered
-			if (pirate_ship->hp() <= 0) // Check if pirates are dead
+			if (has_surrendered) break; // check if player surrendered
+			if (pirate_ship->hp() <= 0) // check if pirates are dead
 			{
 				m_console->write("The pirates' ship sunk!");
 				m_console->wait();
 				break;
 			}
-			m_console->wait(); // Pirates' turn
-			int dmg = pirate_ship->broadside(); // Pirates broadside
+			m_console->wait(); // pirates' turn
+			int dmg = pirate_ship->broadside(); // pirates broadside
 			m_player_ship->hp_dmg_add(dmg);
 			m_console->write(std::format("The pirates have dealt {} damage to our ship!", dmg));
 
-			m_console->wait(); // Player's turn
-			if (m_player_ship->hp() <= 0) // Check whether player died
+			m_console->wait(); // player's turn
+			if (m_player_ship->hp() <= 0) // check whether player died
 			{
 				m_has_died = true;
 				break;
 			}
-			if (has_escaped) break; // Check if player escaped
+			if (has_escaped) break; // check if player escaped
 		}
 		m_is_fighting = false;
 	}
@@ -614,7 +614,7 @@ namespace Soc
 			m_player_ship->hp_dmg_add(dmg);
 			m_console->write(std::format("Our ship took {} damage during the storm!", dmg));
 		}
-		if (m_player_ship->hp() <= 0) // Check whether player died
+		if (m_player_ship->hp() <= 0) // check whether player died
 		{
 			m_has_died = true;
 			m_console->wait();
