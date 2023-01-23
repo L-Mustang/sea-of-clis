@@ -44,6 +44,7 @@ namespace Soc
 		void sea_battle();
 		[[nodiscard]] int sea_escape(const std::shared_ptr<const Ship>& pirate_ship) const;
 		void sea_move();
+		[[nodiscard]] std::string state() const;
 
 	private:
 		std::unique_ptr<const Filesystem::Filesystem> m_filesystem;

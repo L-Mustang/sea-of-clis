@@ -1,6 +1,8 @@
 #include <cannons.h>
 
+#include <logger.h>
 #include <random/random.h>
+
 
 namespace Soc
 {
@@ -39,11 +41,11 @@ namespace Soc
 	std::ostream& operator<<(std::ostream& os, const Cannons& obj)
 	{
 		return os
-			<< " Cannons: "
-			<< std::right << std::setw(25) << obj.m_cannons << " |"
+			<< " "
+			<< std::left << std::setw(23) << obj.m_cannons << " |"
 			<< " Amount: "
-			<< std::right << std::setw(3) << obj.m_amount << " |"
-			<< " Price: "
-			<< std::right << std::setw(5) << obj.m_price;
+			<< std::right << std::setw(2) << obj.m_amount << " |"
+			<< std::left << " $ "
+			<< std::right << std::setw(5) << Logger::format(obj.m_price);
 	}
 }

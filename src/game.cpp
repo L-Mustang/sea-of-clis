@@ -627,12 +627,19 @@ namespace Soc
 		));
 	}
 
+	std::string Game::state() const
+	{
+		if(m_is_fighting) return "In battle";
+		if(m_at_sea) return "Open seas";
+		return m_player_harbor->harbor();
+	}
+
 	std::ostream& operator<<(std::ostream& os, const Game& obj)
 	{
 		return os << std::format(
 			"${}   {}   {}   Cargo: {}/{}   Cannons: {}/{}   HP:  {}/{}",
 			Logger::format(obj.m_money),
-			obj.m_player_harbor->harbor(),
+			obj.state(),
 			obj.m_player_ship->type(),
 			obj.m_player_ship->cargo_amount(),
 			obj.m_player_ship->cargo_max(),

@@ -2,11 +2,10 @@
 
 #include <cannons.h>
 #include <cannons_type.h>
+#include <goods.h>
+#include <logger.h>
 #include <ship_type.h>
 #include <utils/map.h>
-#include <goods.h>
-
-#include <utility>
 
 namespace Soc
 {
@@ -178,19 +177,17 @@ namespace Soc
 	std::ostream& operator<<(std::ostream& os, const Ship& obj)
 	{
 		return os
-			<< " Type: "
-			<< std::right << std::setw(17) << obj.m_type << " |"
-			<< " Price: "
-			<< std::right << std::setw(7) << obj.m_price << " |"
+			<< " "
+			<< std::left << std::setw(16) << obj.m_type << " |"
 			<< " Cargo capacity: "
-			<< std::right << std::setw(3) << obj.m_cargo_max << " |"
+			<< std::right << std::setw(3) << obj.m_cargo_max << " tonnes" << " |"
 			<< " Cannon slots: "
-			<< std::right << std::setw(3) << obj.m_cannons_max << " |"
+			<< std::right << std::setw(2) << obj.m_cannons_max << " |"
 			<< " HP: "
 			<< std::right << std::setw(3) << obj.m_hp << " |"
-			<< " Weight: "
-			<< std::right << std::setw(6) << obj.m_weight_class << " |"
-			<< " Size: "
-			<< std::right << std::setw(6) << obj.size();
+			<< std::right << std::setw(7) << obj.m_weight_class << " |"
+			<< std::right << std::setw(6) << obj.size() << " |"
+			<< std::left << " $ "
+			<< std::right << std::setw(7) << Logger::format(obj.m_price);
 	}
 }

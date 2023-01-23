@@ -26,14 +26,7 @@ namespace Soc {
 		std::string m_harbor;
 		std::vector<std::shared_ptr<const Goods>> m_goods;
 
-		friend std::ostream& operator<<(std::ostream& os, const Harbor& obj)
-	{
-		return os
-			<< " Harbor: "
-			<< std::right << std::setw(10) << obj.m_harbor << " |"
-			<< " Distance: "
-			<< std::right << std::setw(5) << obj.m_distance;
-	}
+		friend std::ostream& operator<<(std::ostream& os, const Harbor& obj);
 	};
 }
 

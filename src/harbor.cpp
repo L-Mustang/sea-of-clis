@@ -59,4 +59,13 @@ namespace Soc
 	{
 		m_distance -= distance;
 	}
+
+	std::ostream& operator<<(std::ostream& os, const Harbor& obj)
+	{
+		return os
+			<< " "
+			<< std::left << std::setw(16) << obj.m_harbor << " |"
+			<< " "
+			<< std::right << std::setw(2) << obj.m_distance << " days";
+	}
 }

@@ -2,6 +2,8 @@
 
 #include <random/random.h>
 
+#include <logger.h>
+
 namespace Soc
 {
 	Goods::Goods(const int id, std::string goods, const int min_amount,
@@ -46,11 +48,10 @@ namespace Soc
 	std::ostream& operator<<(std::ostream& os, const Goods& obj)
 	{
 		return os
-			<< " Good: "
-			<< std::right << std::setw(10) << obj.m_goods << " |"
-			<< " Amount: "
-			<< std::right << std::setw(5) << obj.m_amount << " |"
-			<< " Price: "
-			<< std::right << std::setw(5) << obj.m_price;
+			<< " "
+			<< std::left << std::setw(10) << obj.m_goods << " |"
+			<< std::right << std::setw(5) << obj.m_amount << " tonnes" << " |"
+			<< std::left << " $ "
+			<< std::right << std::setw(4) << Logger::format(obj.m_price) << " p/tonne";
 	}
 }

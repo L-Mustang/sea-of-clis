@@ -5,6 +5,7 @@ project(sea-of-clis)
 option(USE_LIBS "Use the Win32 API, C Run-time, Clang AddressSanitizer for platform-specific console clearing and debugging features" ON)
 option(USE_CRT "Use the C Run-time library for memory leak detection" OFF)
 option(USE_ASAN "Use AddressSanitizer" OFF)
+option(USE_HOT_RELOAD "Use Hot Reload in VS" ON)
 
 find_package(unofficial-sqlite3 REQUIRED)
 
@@ -28,13 +29,21 @@ add_executable(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
+if(USE_HOT_RELOAD AND NOT USE_ASAN AND NOT USE_CRT) 
+	if (MSVC AND WIN32 AND NOT MSVC_VERSION VERSION_LESS 142)
+		message("Hot reload enabled")
+		target_compile_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:/MDd /ZI /Ob0 /Od /RTC1>)
+		target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:/INCREMENTAL>)
+	endif()
+endif()
+
 if(USE_LIBS)
-	message("Building with lib support")
+	message("Libs enabled")
 	target_compile_definitions(${PROJECT_NAME} PRIVATE
 		USE_LIBS # include Windows.h
 	)
 	if(USE_ASAN)
-		message("Building with AddressSanitizer support")
+		message("AddressSanitizer enabled")
 		if(MSVC)
 			target_compile_options(${PROJECT_NAME} PUBLIC /fsanitize=address)
 		else() # ^^^ msvc / other vvv
@@ -43,7 +52,7 @@ if(USE_LIBS)
 		endif() # MSVC
 	endif() # USE ASAN
 	if(USE_CRT)
-		message("Building with CRT support for memory leak detection")
+		message("CRT support for memory leak detection enabled")
 		target_compile_definitions(${PROJECT_NAME} PRIVATE
 			USE_CRT
 		)
