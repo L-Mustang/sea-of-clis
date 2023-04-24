@@ -1,3 +1,6 @@
+# Sea of CLIs
+A small turn-based CLI game with support for cross-platform CMake development. Additionally supports CRT memory leak detection and ASAN in VS 2022.
+
 # Justifications
 
 ### Code conventions and style
@@ -26,5 +29,6 @@ https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#Rc-
 https://developercommunity.visualstudio.com/t/access-violation-writing-location-in-output-window/1383196
 
 ### Credits
-Icon
+Old-Fashioned Pirate Ship by KokoroReflections, unmodified.
 https://opengameart.org/content/old-fashioned-pirate-ship
+Licensed under CC BY 4.0.
